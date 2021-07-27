@@ -3,7 +3,7 @@ Bayesian verb argument structure learner with noise filter
 
 This repo contains all scripts for running the model simulations reported in Perkins, Feldman, & Lidz (in revision), "The Power of Ignoring: Filtering Input for Argument Structure Acquisition." Scripts were written in Python 3. Copyright Laurel Perkins; contact: perkinsl@ucla.edu.
 
-Notes: all probabilities in these scripts are in log space except where comments indicate otherwise. The dataset for the scripts is summarized in Perkins, Feldman, & Lidz (under revision). Runtime for these scripts is quite long over this dataset (several hours to several days depending on processor).
+Notes: all probabilities in these scripts are in log space except where comments indicate otherwise. The dataset compiled from the CHILDES Treebank (Pearl & Sprouse, 2013) is summarized in Perkins, Feldman, & Lidz (under revision). Runtime for these scripts is quite long over this dataset (several hours to several days depending on processor).
 
 ----------------------------------------------------------------
 SCRIPTS INCLUDE:
@@ -25,7 +25,7 @@ SCRIPTS INCLUDE:
 -----------------------------------------------------------------
 INSTRUCTIONS FOR RUNNING SCRIPTS:
 
-To run the basic joint inference script on the original CHILDES Treebank dataset, make sure all of these files are located in the same directory, and then call joint_inference.py.
+To run the basic joint inference script on the original dataset, make sure all of these files are located in the same directory, and then call joint_inference.py.
 
 To change the dataset for the model, comment out the data vector at the end of joint_inference.py and paste in your own data vector. Or better yet, modify the script to read in a .csv or .txt data file.
 
