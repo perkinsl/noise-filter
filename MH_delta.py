@@ -20,49 +20,60 @@
 #   pdf_delta function
 #Returns vector of delta values after running specified number of iterations
 
+#Updates 07/29/2021:
+#1. merged MH_delta and MH_epsilon into one file (the two files are identical except for the input arguments 
+#       and when calculating the log pdf with constant delta/epsilon and updated epsilon/delta);
+#2. kept both delta and epsilon in the input argument and added boolean variable isDelta to input argument 
+#       to determine whether the current MH sampling is being done on delta or epsilon so that we can call function pdf with appropriate variables
+
 import math
 import random
-from pdf_delta import pdf_delta
+from pdf import pdf
 
-def MH_delta(data, models, epsilon, gammas, iterations):
-
-	#Initialize a random value of delta
-	delta = random.random()
+def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
+    
+	#Initialize a random value of epsilon
+	MHvar = random.random()
 	
-	#Use pdf_delta.m to calculate logs of height of delta on curve proportional to pdf over delta
-	p_delta = pdf_delta(data, models, epsilon, delta, gammas)
+	#Use pdf.m to calculate logs of height of epsilon on curve proportional to pdf over epsilon
+	p_MHvar = pdf(data, models, delta, epsilon, gammas)
 	
-	timelog = [delta]
+	timelog = [MHvar]
 	
 	for i in range(1, iterations):
-	
-		#Sample a new value of delta from a proposal distribution Q, a Gaussian
-		#with mu = delta and sigma = 0.25
-		deltaprime = random.gauss(delta, 0.25)
-		#print('deltaprime', deltaprime)
 		
-		#Use pdf_delta.m to calculate logs of height of deltaprime on curve proportional to pdf over deltaprime
-		p_deltaprime = pdf_delta(data, models, epsilon, deltaprime, gammas)
-		#print('p_deltaprime', p_deltaprime)
+		#Sample a new value of epsilon from a proposal distribution Q, a Gaussian
+		#with mu = epsilon and sigma = 0.25
+		MHvar_prime = random.gauss(MHvar, 0.25)
+		#print('epsilonprime', epsilonprime)
 		
-		if p_deltaprime == float('-inf'):
-			delta = delta
-			p_delta = p_delta
+        #Determine whether the variable being sampled with MH sampling is delta or epsilon
+        if isDelta:
+		#Use pdf.m to calculate logs of height of epsilonprime on curve proportional to pdf over epsilon
+		    p_MHvar_prime = pdf(data, models, MHvar_prime, epsilon, gammas)
+		#print('p_epsilonprime', p_epsilonprime)
+		
+        else:
+            p_MHvar_prime = pdf(data, models, delta, MHvar_prime, gammas)
+        
+		if p_MHvar_prime == float('-inf'):
+			MHvar_prime = MHvar_prime
+			p_MHvar = p_MHvar
 		
 		else:
-			#Accept proposal deltaprime with acceptance probability A (in log space)
-			A = min(0, p_deltaprime-p_delta)
+			#Accept proposal epsilonprime with acceptance probability A (in log space)
+			A = min(0, p_MHvar_prime-p_MHvar)
 		
 			if A == 0:
-				delta = deltaprime
-				p_delta = p_deltaprime
-			
+				MHvar = MHvar_prime
+				p_MHvar = p_MHvar_prime
+
 			else:
 				x = random.random()
-				if x < math.exp(p_deltaprime-p_delta):
-					delta = deltaprime
-					p_delta = p_deltaprime
+				if x < math.exp(p_MHvar_prime-p_MHvar):
+					MHvar = MHvar_prime
+					p_MHvar = p_MHvar_prime
 				
-		timelog.append(delta)
+		timelog.append(MHvar)
 		
 	return timelog
