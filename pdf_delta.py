@@ -17,16 +17,19 @@
 ## NOTE: a lot of this repeats code from sample_models.py
 ## see comments in that code for details on how this corresponds to math in Perkins, Feldman, & Lidz
 
+#Updates 07/29/2021: merged pdf_delta and pdf_epsilon (which are identical except for the order of delta and epsilon 
+#    in the input argument) into one file and updated variable names in MH_delta and MH_epsilon
+
 import math
 import numpy as np
 import itertools
 from operator import add
 
-def pdf_delta(data, models, epsilon, delta, gammas):
+def pdf(data, models, delta, epsilon, gammas):
 	
-	if delta <= 0:
+	if epsilon <= 0:
 		p = float('-inf')
-	elif delta >= 1:
+	elif epsilon >= 1:
 		p = float('-inf')
 	else:
 		verbposteriors = []
@@ -35,8 +38,8 @@ def pdf_delta(data, models, epsilon, delta, gammas):
 		M2dict = {}
 		M3dict = {}
 		
-		## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
-		## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
+        ## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
+        ## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
 		for verb in range(0, len(models)):
 		
 			verbcount = data[verb]
@@ -47,7 +50,7 @@ def pdf_delta(data, models, epsilon, delta, gammas):
 			M2component = []
 			M3component = []
 			
-			## create (n1, k1) tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
+			## create tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
 			## equivalent to "for n1 in range (0, n+1) for k1 in range (0, k+1)"
 			n1 = range(n+1)
 			k1 = range(k+1)
@@ -209,10 +212,10 @@ def pdf_delta(data, models, epsilon, delta, gammas):
 			else:
 				print('Invalid model value')
 
-		## function g(delta) in Equation (13) is equal to product across all verbs of likelihood term, times prior on delta
-		## prior is equal to 1 for all values of delta, because delta ~ Beta(1,1),
-		## so this reduces to product across all verbs of likelihood term
-		## and here, we're returning that value in log space
+        ## function g(delta) in Equation (13) is equal to product across all verbs of likelihood term, times prior on delta
+        ## prior is equal to 1 for all values of delta, because delta ~ Beta(1,1),
+        ## so this reduces to product across all verbs of likelihood term
+        ## and here, we're returning that value in log space
 		p = sum(verbposteriors)
 	
 	return p
