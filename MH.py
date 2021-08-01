@@ -47,14 +47,14 @@ def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
 		MHvar_prime = random.gauss(MHvar, 0.25)
 		#print('epsilonprime', epsilonprime)
 		
-        #Determine whether the variable being sampled with MH sampling is delta or epsilon
-        if isDelta:
-		#Use pdf.m to calculate logs of height of epsilonprime on curve proportional to pdf over epsilon
-		    p_MHvar_prime = pdf(data, models, MHvar_prime, epsilon, gammas)
-		#print('p_epsilonprime', p_epsilonprime)
+        	#Determine whether the variable being sampled with MH sampling is delta or epsilon
+		if isDelta:
+			#Use pdf.m to calculate logs of height of epsilonprime on curve proportional to pdf over epsilon
+			p_MHvar_prime = pdf(data, models, MHvar_prime, epsilon, gammas)
+			#print('p_epsilonprime', p_epsilonprime)
 		
-        else:
-            p_MHvar_prime = pdf(data, models, delta, MHvar_prime, gammas)
+		else:
+			p_MHvar_prime = pdf(data, models, delta, MHvar_prime, gammas)
         
 		if p_MHvar_prime == float('-inf'):
 			MHvar_prime = MHvar_prime
