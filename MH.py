@@ -38,9 +38,9 @@ def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
 	#Determine whether the variable being sampled with MH sampling is delta or epsilon
 	if isDelta:
 		#Use pdf.m to calculate logs of height of epsilon on curve proportional to pdf over epsilon
-		p_MHvar = pdf(data, models, MHvar, epsilon, gammas)
+		p_MHvar = pdf(data, models, MHvar, epsilon, gammas, isDelta)
 	else:
-		p_MHvar = pdf(data, models, delta, MHvar, gammas)
+		p_MHvar = pdf(data, models, delta, MHvar, gammas, isDelta)
 	
 	timelog = [MHvar]
 	
@@ -54,11 +54,11 @@ def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
         	#Determine whether the variable being sampled with MH sampling is delta or epsilon
 		if isDelta:
 			#Use pdf.m to calculate logs of height of epsilonprime on curve proportional to pdf over epsilon
-			p_MHvar_prime = pdf(data, models, MHvar_prime, epsilon, gammas)
+			p_MHvar_prime = pdf(data, models, MHvar_prime, epsilon, gammas, isDelta)
 			#print('p_epsilonprime', p_epsilonprime)
 		
 		else:
-			p_MHvar_prime = pdf(data, models, delta, MHvar_prime, gammas)
+			p_MHvar_prime = pdf(data, models, delta, MHvar_prime, gammas, isDelta)
         
 		if p_MHvar_prime == float('-inf'):
 			MHvar_prime = MHvar_prime
