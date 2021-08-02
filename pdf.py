@@ -18,18 +18,24 @@
 ## see comments in that code for details on how this corresponds to math in Perkins, Feldman, & Lidz
 
 #Updates 07/29/2021: merged pdf_delta and pdf_epsilon (which are identical except for the order of delta and epsilon 
-#    in the input argument) into one file and updated variable names in MH_delta and MH_epsilon
+#    in the input argument and in the beginning when checking if delta/epsilon is between (0, 1)) into one file and updated variable names in MH_delta and MH_epsilon
 
 import math
 import numpy as np
 import itertools
 from operator import add
 
-def pdf(data, models, delta, epsilon, gammas):
+def pdf(data, models, delta, epsilon, gammas, isDelta):
 	
-	if epsilon <= 0:
+	# check if delta/epsilon is within valid probability range
+	if isDelta:
+		var = delta
+	else:
+		var = epsilon
+	
+	if var <= 0:
 		p = float('-inf')
-	elif epsilon >= 1:
+	elif var >= 1:
 		p = float('-inf')
 	else:
 		verbposteriors = []
