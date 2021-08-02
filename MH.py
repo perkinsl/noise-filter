@@ -35,8 +35,12 @@ def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
 	#Initialize a random value of epsilon
 	MHvar = random.random()
 	
-	#Use pdf.m to calculate logs of height of epsilon on curve proportional to pdf over epsilon
-	p_MHvar = pdf(data, models, delta, epsilon, gammas)
+	#Determine whether the variable being sampled with MH sampling is delta or epsilon
+	if isDelta:
+		#Use pdf.m to calculate logs of height of epsilon on curve proportional to pdf over epsilon
+		p_MHvar = pdf(data, models, MHvar, epsilon, gammas)
+	else:
+		p_MHvar = pdf(data, models, delta, MHvar, gammas)
 	
 	timelog = [MHvar]
 	
