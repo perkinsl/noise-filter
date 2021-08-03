@@ -18,7 +18,7 @@
 import math
 import random
 from sample_models import sample_models
-from MH import MH
+from MH_delta_epsilon import MH
 
 def joint_inference(data, iterations):
 
