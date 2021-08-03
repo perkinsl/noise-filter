@@ -25,17 +25,12 @@ import numpy as np
 import itertools
 from operator import add
 
-def pdf(data, models, delta, epsilon, gammas, isDelta):
+def pdf(data, models, delta, epsilon, gammas):
 	
-	# check if delta/epsilon is within valid probability range
-	if isDelta:
-		var = delta
-	else:
-		var = epsilon
-	
-	if var <= 0:
+	# check if delta and epsilon are within valid probability range
+	if delta < 0 or epsilon < 0:
 		p = float('-inf')
-	elif var >= 1:
+	elif delta > 1 or epsilon > 1:
 		p = float('-inf')
 	else:
 		verbposteriors = []
