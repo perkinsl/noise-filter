@@ -28,7 +28,7 @@
 
 import math
 import random
-from pdf_delta_epsilon import pdf_delta_epsilon
+from pdf_delta_epsilon import pdf
 
 def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
     
