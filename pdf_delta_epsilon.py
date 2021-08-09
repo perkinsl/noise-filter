@@ -86,9 +86,9 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
         
                     return k0term
 
-def calculate_M1k1(n1, k1):
-    if (n1, k1) in M1dict:
-        M1k1term = M1dict[(n1, k1)]
+    def calculate_M1k1(n1, k1):
+        if (n1, k1) in M1dict:
+            M1k1term = M1dict[(n1, k1)]
         
         else:
             if k1 <= n1:
@@ -100,11 +100,11 @@ def calculate_M1k1(n1, k1):
                 M1k1term = float('-inf')
             M1dict[(n1, k1)] = M1k1term
     
-    return M1k1term
+        return M1k1term
 
-def calculate_M2k1(n1, k1):
-    if (n1, k1) in M2dict:
-        M2k1term = M2dict[(n1, k1)]
+    def calculate_M2k1(n1, k1):
+        if (n1, k1) in M2dict:
+            M2k1term = M2dict[(n1, k1)]
         
         else:
             if k1 <= n1:
@@ -116,13 +116,13 @@ def calculate_M2k1(n1, k1):
             else:
                 M2k1term = float('-inf')
     
-                    M2dict[(n1, k1)] = M2k1term
+            M2dict[(n1, k1)] = M2k1term
                         
-                        return M2k1term
+        return M2k1term
 
-def calculate_M3k1(n1, k1):
-    if (n1, k1) in M3dict:
-        M3k1term = M3dict[(n1, k1)]
+    def calculate_M3k1(n1, k1):
+        if (n1, k1) in M3dict:
+            M3k1term = M3dict[(n1, k1)]
         
         else:
             if k1 <= n1:
@@ -183,41 +183,41 @@ def calculate_M3k1(n1, k1):
             gammas[(key, n)] = math.lgamma(n+1)-(math.lgamma(key+1)+math.lgamma(n-key+1))
             noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
 
-M1component.append(M1logsum + noise)
-M2component.append(M2logsum + noise)
-M3component.append(M3logsum + noise)
+    M1component.append(M1logsum + noise)
+    M2component.append(M2logsum + noise)
+    M3component.append(M3logsum + noise)
 
-M1component.sort(reverse=True)
-M2component.sort(reverse=True)
-M3component.sort(reverse=True)
+    M1component.sort(reverse=True)
+    M2component.sort(reverse=True)
+    M3component.sort(reverse=True)
 
-if M1component[0] == float('-inf'):
-    M1componentsub = M1component
+    if M1component[0] == float('-inf'):
+        M1componentsub = M1component
     
     else:
         M1componentsub = [(i-M1component[0]) for i in M1component]
 
-if M2component[0] == float('-inf'):
-    M2componentsub = M2component
+    if M2component[0] == float('-inf'):
+        M2componentsub = M2component
     
     else:
         M2componentsub = [(i-M2component[0]) for i in M2component]
 
-if M3component[0] == float('-inf'):
-    M3componentsub = M3component
+    if M3component[0] == float('-inf'):
+        M3componentsub = M3component
     
     else:
         M3componentsub = [(i-M3component[0]) for i in M3component]
 
-M1componentexp = [math.exp(i) for i in M1componentsub]
-M2componentexp = [math.exp(i) for i in M2componentsub]
-M3componentexp = [math.exp(i) for i in M3componentsub]
+    M1componentexp = [math.exp(i) for i in M1componentsub]
+    M2componentexp = [math.exp(i) for i in M2componentsub]
+    M3componentexp = [math.exp(i) for i in M3componentsub]
 
-M1likelihood = M1component[0] + np.log1p(sum(M1componentexp[1:]))
-M2likelihood = M2component[0] + np.log1p(sum(M2componentexp[1:]))
-M3likelihood = M3component[0] + np.log1p(sum(M3componentexp[1:]))
+    M1likelihood = M1component[0] + np.log1p(sum(M1componentexp[1:]))
+    M2likelihood = M2component[0] + np.log1p(sum(M2componentexp[1:]))
+    M3likelihood = M3component[0] + np.log1p(sum(M3componentexp[1:]))
 
-return [M1likelihood, M2likelihood, M3likelihood]
+    return [M1likelihood, M2likelihood, M3likelihood]
 
 
 def pdf(data, models, delta, epsilon, gammas):
@@ -253,10 +253,10 @@ def pdf(data, models, delta, epsilon, gammas):
             else:
                 print('Invalid model value')
 
-## function g(delta) in Equation (13) is equal to product across all verbs of likelihood term, times prior on delta
-## prior is equal to 1 for all values of delta, because delta ~ Beta(1,1),
-## so this reduces to product across all verbs of likelihood term
-## and here, we're returning that value in log space
-p = sum(verbposteriors)
+        ## function g(delta) in Equation (13) is equal to product across all verbs of likelihood term, times prior on delta
+        ## prior is equal to 1 for all values of delta, because delta ~ Beta(1,1),
+        ## so this reduces to product across all verbs of likelihood term
+        ## and here, we're returning that value in log space
+        p = sum(verbposteriors)
 
-return p
+    return p
