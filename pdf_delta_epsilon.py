@@ -183,9 +183,9 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
             gammas[(key, n)] = math.lgamma(n+1)-(math.lgamma(key+1)+math.lgamma(n-key+1))
             noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
 
-    M1component.append(M1logsum + noise)
-    M2component.append(M2logsum + noise)
-    M3component.append(M3logsum + noise)
+        M1component.append(M1logsum + noise)
+        M2component.append(M2logsum + noise)
+        M3component.append(M3logsum + noise)
 
     M1component.sort(reverse=True)
     M2component.sort(reverse=True)
