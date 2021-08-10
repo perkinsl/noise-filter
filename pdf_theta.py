@@ -22,7 +22,7 @@ import numpy as np
 import itertools
 from operator import add
 
-data =[[80,100]]
+
 
 def pdf_theta(data, delta, epsilon, thetas, gammas):
 
@@ -104,13 +104,18 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 			if (n1, k1) in M3dict:
 				M3k1term = M3dict[(n1, k1)]
 			else:
-				if k1 <= n1:
-					# if ((k1), (n1)) in gammas:
-					# #M3k1term = np.log(1.0)-np.log(n1+1)
-					# 	M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta)
+				# if (k-k1)<=(n-n1):
+					# if ((k-k1), (n-n1)) in gammas:
+					# 	k2term = gammas[((k-k1), (n-n1))]+(k-k1)*np.log(delta)+((n-n1)-(k-k1))*np.log(1-delta)
 					# else:
-					gammas[((k1), (n1))] = math.lgamma(n1+1)-(math.lgamma(k1+1)+math.lgamma((n1)-(k1)+1))
-					M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta))
+					# 	gammas[((k-k1), (n-n1))] = math.lgamma(n-n1+1)-(math.lgamma(k-k1+1)+math.lgamma((n-n1)-(k-k1)+1))
+					# 	k2term = gammas[((k-k1), (n-n1))]+(k-k1)*np.log(delta)+((n-n1)-(k-k1))*np.log(1-delta)
+				if k1 <= n1:
+					if ((k1), (n1)) in gammas:
+						M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta) + ((n1)-(k1))*np.log(1-theta)
+					else:
+						gammas[((k1), (n1))] = math.lgamma(n1+1)-(math.lgamma(k1+1)+math.lgamma((n1)-(k1)+1))
+						M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta))
 				else:
 					M3k1term = float('-inf')
 
@@ -211,5 +216,5 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 	print(p)
 	return p
-
-pdf_theta(data, 0.01, 0.01, [0.8], {})
+data =[[6,10]]
+pdf_theta(data, 0.01, 0.01, [0.6], {})
