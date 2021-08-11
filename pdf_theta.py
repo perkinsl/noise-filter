@@ -3,12 +3,10 @@
 # #   1: verb is fully transitive (theta = 1)
 # #   2: verb is fully intransitive (theta = 0)
 # #   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
+# This file assumes only one category, alternating verbs.
 # #Data: a list of length n where each item is a 2-element list corresponding
 # #   to counts of observations for each of n verbs. In each sublist, the first element
 # #   contains counts of direct objects and the second contains total number of observations
-# #Models: a list of model values (1, 2, or 3) for each verb in the data
-# #   array, where each element in list corresponds to a row in the data
-# #   array
 # #Epsilon: a decimal from 0 to 1
 # #Returns p, height of function proportional to pdf of posterior probability
 # #   on delta, at specified value of delta
@@ -43,8 +41,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 		k = verbcount[0]
 		n = verbcount[1]
 
-		# M1component = []
-		# M2component = []
+
 		M3component = []
 
 		## create (n1, k1) tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
@@ -52,7 +49,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 		n1 = range(n+1)
 		k1 = range(k+1)
 		combinations = list(itertools.product(n1, k1))
-
+		## implementing Equation (9) in Perkins, Feldman & Lidz: p(k0|n0, delta), in log space
 		def calculate_k2(n1, k1):
 			if (k-k1)<=(n-n1):
 				if ((k-k1), (n-n1)) in gammas:
@@ -66,40 +63,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 			return k2term
 
-		# def calculate_M1k1(n1, k1):
-		# 	if (n1, k1) in M1dict:
-		# 		M1k1term = M1dict[(n1, k1)]
-		#
-		# 	else:
-		# 		if k1 <= n1:
-		# 			if k1 == n1:
-		# 				M1k1term = 0
-		# 			else:
-		# 				M1k1term = float('-inf')
-		# 		else:
-		# 			M1k1term = float('-inf')
-		# 		M1dict[(n1, k1)] = M1k1term
-		#
-		# 	return M1k1term
-		#
-		# def calculate_M2k1(n1, k1):
-		# 	if (n1, k1) in M2dict:
-		# 		M2k1term = M2dict[(n1, k1)]
-		#
-		# 	else:
-		# 		if k1 <= n1:
-		# 			if k1 == 0:
-		# 				M2k1term = 0
-		# 			else:
-		# 				M2k1term = float('-inf')
-		#
-		# 		else:
-		# 			M2k1term = float('-inf')
-		#
-		# 		M2dict[(n1, k1)] = M2k1term
-		#
-		# 	return M2k1term
-
+		#implementing the calculation for p(k1 | n1, theta)
 		def calculate_M3k1(n1, k1):
 			if (n1, k1) in M3dict:
 				M3k1term = M3dict[(n1, k1)]
@@ -121,12 +85,8 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 		for key, group in itertools.groupby(combinations, lambda x: x[0]):
 			ngroup = list(group)
 			k2term = list(itertools.starmap(calculate_k2, ngroup))
-			# M1k1term = list(itertools.starmap(calculate_M1k1, ngroup))
-			# M2k1term = list(itertools.starmap(calculate_M2k1, ngroup))
 			M3k1term = list(itertools.starmap(calculate_M3k1, ngroup))
 
-			# M1term = list(map(add, M1k1term, k2term))
-			# M2term = list(map(add, M2k1term, k2term))
 			M3term = list(map(add, M3k1term, k2term))
 
 			# M1term.sort(reverse=True)
@@ -166,25 +126,11 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 				gammas[(key, n)] = math.lgamma(n+1)-(math.lgamma(key+1)+math.lgamma(n-key+1))
 				noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
 
-			# M1component.append(M1logsum + noise)
-			# M2component.append(M2logsum + noise)
+
 			M3component.append(M3logsum + noise)
 
-		# M1component.sort(reverse=True)
-		# M2component.sort(reverse=True)
 		M3component.sort(reverse=True)
 
-		# if M1component[0] == float('-inf'):
-		# 	M1componentsub = M1component
-		#
-		# else:
-		# 	M1componentsub = [(i-M1component[0]) for i in M1component]
-		#
-		# if M2component[0] == float('-inf'):
-		# 	M2componentsub = M2component
-		#
-		# else:
-		# 	M2componentsub = [(i-M2component[0]) for i in M2component]
 
 		if M3component[0] == float('-inf'):
 			M3componentsub = M3component
@@ -192,12 +138,8 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 		else:
 			M3componentsub = [(i-M3component[0]) for i in M3component]
 
-		# M1componentexp = [math.exp(i) for i in M1componentsub]
-		# M2componentexp = [math.exp(i) for i in M2componentsub]
 		M3componentexp = [math.exp(i) for i in M3componentsub]
 
-		# M1likelihood = M1component[0] + np.log1p(sum(M1componentexp[1:]))
-		# M2likelihood = M2component[0] + np.log1p(sum(M2componentexp[1:]))
 		M3likelihood = M3component[0] + np.log1p(sum(M3componentexp[1:]))
 
 	verbposteriors.append(M3likelihood)
@@ -211,4 +153,4 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 	print(p)
 	return p
 data =[[6,10]]
-pdf_theta(data, 0.01, 0.01, [0.6], {})
+pdf_theta(data, 0.01, 0.01, [0.2], {})
