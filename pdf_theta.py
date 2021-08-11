@@ -150,7 +150,4 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 	## and here, we're returning that value in log space
 	p = verbposteriors
 
-	print(p)
 	return p
-data =[[6,10]]
-pdf_theta(data, 0.01, 0.01, [0.2], {})
