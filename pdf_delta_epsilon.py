@@ -3,26 +3,22 @@
 #   1: verb is fully transitive (theta = 1)
 #   2: verb is fully intransitive (theta = 0)
 #   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
-#Data: a list of length n where each item is a 2-element list corresponding
-#   to counts of observations for each of n verbs. In each sublist, the first element
+#Data: a list of length n where each item is a 2-element list corresponding 
+#   to counts of observations for each of n verbs. In each sublist, the first element 
 #   contains counts of direct objects and the second contains total number of observations
 #Models: a list of model values (1, 2, or 3) for each verb in the data
 #   array, where each element in list corresponds to a row in the data
 #   array
-#Epsilon: a decimal from 0 to 1
+#Delta: a decimal from 0 to 1
 #Returns p, height of function proportional to pdf of posterior probability
-#   on delta, at specified value of delta
+#   on epsilon, at specified value of epsilon
 
-
-## NOTE: a lot of this repeats code from sample_models.py
-## see comments in that code for details on how this corresponds to math in Perkins, Feldman, & Lidz
-
-#Updates 07/29/2021: merged pdf_delta and pdf_epsilon (which are identical except for the order of delta and epsilon
-#    in the input argument and in the beginning when checking if delta/epsilon is between (0, 1)) into one file and updated variable names in MH_delta and MH_epsilon
+#Updates 07/29/2021: merged pdf_delta and pdf_epsilon (which are identical except for the order of delta and epsilon in the input argument) into one file and updated variable names in MH_delta and MH_epsilon
 
 #Updates 08/03/2021: create function likelihoods (identical to original pdf_delta and pdf_epsilon function from line 43 to line 198), which calculates the M1likehood,
-#    M2likelihood, M3likelihood of a given verb. Here, M1dict, M2dict, M3dict are passed in as arguments because we need to save these values globally, just like gammas.
+#    M2likelihood, M3likelihood of a given verb. Here, M1dict, M2dict, M3dict are passed in as arguments because we need to save these values globally, just like gammas. 
 
+#Updates 08/10/2021: got rid of the for loop within function pdf
 
 import math
 import numpy as np
@@ -57,7 +53,7 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
         else:
             k0term = float('-inf')
         
-                    return k0term
+        return k0term
 
     def calculate_M1k1(n1, k1):
         if (n1, k1) in M1dict:
@@ -192,6 +188,27 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
 
     return [M1likelihood, M2likelihood, M3likelihood]
 
+def likelihood_given_M(verbNumber, data, models, delta, epsilon, gammas, M1dict, M2dict, M3dict):
+    
+    verbcount = data[verbNumber]
+    #given a verb, calculates the likelihoods over three categories
+    verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
+        
+    if models[verbNumber] == 1:
+        #verbposteriors.append(verbLikelihoods[0])
+        return verbLikelihoods[0]
+            
+    elif models[verbNumber] == 2:
+        #verbposteriors.append(verbLikelihoods[1])
+        return verbLikelihoods[1]
+    
+    elif models[verbNumber] == 3:
+        #verbposteriors.append(verbLikelihoods[2])
+        return verbLikelihoods[2]
+            
+    else:
+        print('Invalid model value')
+        return float('-inf')
 
 def pdf(data, models, delta, epsilon, gammas):
     
@@ -208,28 +225,14 @@ def pdf(data, models, delta, epsilon, gammas):
         
         ## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
         ## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
-        for verb in range(0, len(models)):
-            
-            verbcount = data[verb]
-            #given a verb, calculates the likelihoods over three categories
-            verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
-            
-            if models[verb] == 1:
-                verbposteriors.append(verbLikelihoods[0])
-            
-            elif models[verb] == 2:
-                verbposteriors.append(verbLikelihoods[1])
-            
-            elif models[verb] == 3:
-                verbposteriors.append(verbLikelihoods[2])
-            
-            else:
-                print('Invalid model value')
-
-        ## function g(delta) in Equation (13) is equal to product across all verbs of likelihood term, times prior on delta
-        ## prior is equal to 1 for all values of delta, because delta ~ Beta(1,1),
-        ## so this reduces to product across all verbs of likelihood term
-        ## and here, we're returning that value in log space
+        verbposteriors = [likelihood_given_M(verb, data, models, delta, epsilon, gammas, M1dict, M2dict, M3dict) for verb in range(len(models))]
+        
+        #for i in range(len(verbLikelihood)):
+            #verbposteriors.append(verbLikelihood[i])
+## function g(delta) in Equation (13) is equal to product across all verbs of likelihood term, times prior on delta
+## prior is equal to 1 for all values of delta, because delta ~ Beta(1,1),
+## so this reduces to product across all verbs of likelihood term
+## and here, we're returning that value in log space
         p = sum(verbposteriors)
 
     return p
