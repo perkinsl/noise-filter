@@ -129,7 +129,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 		M3likelihood = M3component[0] + np.log1p(sum(M3componentexp[1:]))
 
-	verbposteriors.append(M3likelihood)
+		verbposteriors.append(M3likelihood)
 
 	# return a vector of the probabilities of each theta value for each verb, in log space
 	p = verbposteriors
