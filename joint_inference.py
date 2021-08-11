@@ -18,8 +18,7 @@
 import math
 import random
 from sample_models import sample_models
-from MH_epsilon import MH_epsilon
-from MH_delta import MH_delta
+from MH_delta_epsilon import MH
 
 def joint_inference(data, iterations):
 
@@ -40,15 +39,15 @@ def joint_inference(data, iterations):
 		
 		#Run Metropolis-Hastings simulation 10 times to infer new epsilon
 		#from current delta and model values
-		
-		timelogepsilon = MH_epsilon(data, models[i], delta[i], gammas, 10)
+		#MH sampling on epsilon, so boolean value is False
+		timelogepsilon = MH(data, models[i], delta[i], epsilon[i], gammas, 10, False)
 		newepsilon = timelogepsilon[9]
 		epsilon.append(newepsilon)
 		
 		#Run Metropolis-Hastings simulation 10 times to infer new delta
 		#from new epsilon and model values
-		
-		timelogdelta = MH_delta(data, models[i], newepsilon, gammas, 10)
+		#MH sampling on delta, so boolean value is True
+		timelogdelta = MH(data, models[i], delta[i], newepsilon, gammas, 10, True)
 		newdelta = timelogdelta[9]
 		delta.append(newdelta)
 	
