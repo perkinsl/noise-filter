@@ -3,33 +3,6 @@
 #   1: verb is fully transitive (theta = 1)
 #   2: verb is fully intransitive (theta = 0)
 #   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
-#Data: a list of length n where each item is a 2-element list corresponding 
-#   to counts of observations for each of n verbs. In each sublist, the first element 
-#   contains counts of direct objects and the second contains total number of observations
-#Models: a list of model values (1, 2, or 3) for each verb in the data
-#   array, where each element in list corresponds to a row in the data
-#   array
-#Delta: a decimal from 0 to 1
-#Returns p, height of function proportional to pdf of posterior probability
-#   on epsilon, at specified value of epsilon
-
-#Updates 07/29/2021: merged pdf_delta and pdf_epsilon (which are identical except for the order of delta and epsilon in the input argument) into one file and updated variable names in MH_delta and MH_epsilon
-
-#Updates 08/03/2021: 1. created function likelihoods (identical to original pdf_delta and pdf_epsilon function from line 43 to line 198), which calculates the M1likehood,
-#    M2likelihood, M3likelihood of a given verb. Here, M1dict, M2dict, M3dict are passed in as arguments because we need to save these values globally, just like gammas.
-#    2. changed all k2 to k0
-
-import math
-import numpy as np
-import itertools
-from operator import add
-
-
-#Simulates a learner encountering a corpus of observations of many verbs (data)
-#With known models for verbs that generated that data:
-#   1: verb is fully transitive (theta = 1)
-#   2: verb is fully intransitive (theta = 0)
-#   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
 #Data: a list of length n where each item is a 2-element list corresponding
 #   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
