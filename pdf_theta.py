@@ -29,6 +29,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 		## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
 		## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
 	for verb in range(0, len(data)):
+		#thetas is a vector where each element corresponds to the theta value for the verb of the same index in the data vector
 		theta = thetas[verb]
 		if theta <= 0:
 			p = float('-inf')
@@ -63,7 +64,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 			return k2term
 
-		#implementing the calculation for p(k1 | n1, theta)
+		#implementing the calculation for p(k1 | n1, theta) (Binomial(n, theta)), in log space
 		def calculate_M3k1(n1, k1):
 			if (n1, k1) in M3dict:
 				M3k1term = M3dict[(n1, k1)]
@@ -89,21 +90,10 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 			M3term = list(map(add, M3k1term, k2term))
 
-			# M1term.sort(reverse=True)
-			# M2term.sort(reverse=True)
+
 			M3term.sort(reverse=True)
 
-			# if M1term[0] == float('-inf'):
-			# 	M1termsub = M1term
-			#
-			# else:
-			# 	M1termsub = [(i-M1term[0]) for i in M1term]
-			#
-			# if M2term[0] == float('-inf'):
-			# 	M2termsub = M2term
-			#
-			# else:
-			# 	M2termsub = [(i-M2term[0]) for i in M2term]
+
 
 			if M3term[0] == float('-inf'):
 				M3termsub = M3term
@@ -111,14 +101,11 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 			else:
 				M3termsub = [(i-M3term[0]) for i in M3term]
 
-			# M1termexp = [math.exp(i) for i in M1termsub]
-			# M2termexp = [math.exp(i) for i in M2termsub]
+
 			M3termexp = [math.exp(i) for i in M3termsub]
 
-			# M1logsum = M1term[0] + np.log1p(sum(M1termexp[1:]))
-			# M2logsum = M2term[0] + np.log1p(sum(M2termexp[1:]))
 			M3logsum = M3term[0] + np.log1p(sum(M3termexp[1:]))
-
+			#Binomial(n, 1-epsilon)
 			if (key, n) in gammas:
 				noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
 
@@ -144,10 +131,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 	verbposteriors.append(M3likelihood)
 
-	## function f(epsilon) in Equation (12) is equal to product across all verbs of likelihood term, times prior on epsilon
-	## prior is equal to 1 for all values of epsilon, because epsilon ~ Beta(1,1),
-	## so this reduces to product across all verbs of likelihood term
-	## and here, we're returning that value in log space
+	# return a vector of the probabilities of each theta value for each verb, in log space
 	p = verbposteriors
 
 	return p
