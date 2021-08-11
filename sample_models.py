@@ -17,10 +17,54 @@
 
 #Updates 08/03/2021: replaced repeated code with function likelihoods
 
+#Updates 08/10/2021: got rid of the for loop within function sample_models
+
 import math
 import random
 import numpy as np
 from pdf_delta_epsilon import likelihoods
+
+def calculate_model(verbNumber, data, epsilon, delta, gammas, M1dict, M2dict, M3dict):
+
+    verbcount = data[verbNumber]
+
+    ## prior P(T) from Equation (7) is flat: 1/3 for each value of T
+    M1prior = 1.0/3.0
+    M2prior = 1.0/3.0
+    M3prior = 1.0/3.0
+
+    verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
+
+    M1likelihood = verbLikelihoods[0]
+    M2likelihood = verbLikelihoods[1]
+    M3likelihood = verbLikelihoods[2]
+
+    ## these are the log numerators for all three verb categories in Equation (7)
+    demM1 = M1likelihood + np.log(M1prior)
+    demM2 = M2likelihood + np.log(M2prior)
+    demM3 = M3likelihood + np.log(M3prior)
+
+    ## calculating denominator for Equation (7)
+    dems = [demM1, demM2, demM3]
+    demsexp = [math.exp(i) for i in dems] ## list comprehension: [fun(i) for i in list]
+    denominator = np.log(sum(demsexp))
+
+    ## final result of Equation (7), in log space
+    M1 = (M1likelihood + np.log(M1prior)) - denominator
+    M2 = (M2likelihood + np.log(M2prior)) - denominator
+    #no need to calculate M3 since the prediction will automatically fall into M3 if it doesn't fit into M1 and M2
+    #M3 = (M3likelihood + np.log(M3prior)) - denominator
+
+    #flips a biased coin weighted by posteriors on models to sample a model (ie, category) for each verb
+    x = random.random()
+    if x <= math.exp(M1):
+        return 1
+
+    elif x <= (math.exp(M1) + math.exp(M2)):
+        return 2
+
+    else:
+        return 3
 
 def sample_models(data, epsilon, delta, gammas):
 	models = []
@@ -33,46 +77,6 @@ def sample_models(data, epsilon, delta, gammas):
 	
 	## loop through every verb in dataset and calculate posterior on transitivity models (T)
 	## following Equation (7) in Perkins, Feldman, & Lidz
-	for i in range(0, len(data)):
-		
-		verbcount = data[i]
-		
-		## prior P(T) from Equation (7) is flat: 1/3 for each value of T
-		M1prior = 1.0/3.0
-		M2prior = 1.0/3.0
-		M3prior = 1.0/3.0
-		
-		verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
-		
-		M1likelihood = verbLikelihoods[0]
-		M2likelihood = verbLikelihoods[1]
-		M3likelihood = verbLikelihoods[2]
-        
-		## these are the log numerators for all three verb categories in Equation (7)
-		demM1 = M1likelihood + np.log(M1prior)
-		demM2 = M2likelihood + np.log(M2prior)
-		demM3 = M3likelihood + np.log(M3prior)
-		
-		## calculating denominator for Equation (7)
-		dems = [demM1, demM2, demM3]
-		demsexp = [math.exp(i) for i in dems] ## list comprehension: [fun(i) for i in list]
-		denominator = np.log(sum(demsexp))
-		
-		## final result of Equation (7), in log space
-		M1 = (M1likelihood + np.log(M1prior)) - denominator
-		M2 = (M2likelihood + np.log(M2prior)) - denominator
-		#no need to calculate M3 since the prediction will automatically fall into M3 if it doesn't fit into M1 and M2
-		#M3 = (M3likelihood + np.log(M3prior)) - denominator
-		
-		#flips a biased coin weighted by posteriors on models to sample a model (ie, category) for each verb
-		x = random.random()
-		if x <= math.exp(M1):
-			models.append(1)
-			
-		elif x <= (math.exp(M1) + math.exp(M2)):
-			models.append(2)
-		
-		else:
-			models.append(3)
+	models = [calculate_model(verb, data, epsilon, delta, gammas, M1dict, M2dict, M3dict) for verb in range(len(data))]
 			
 	return models
