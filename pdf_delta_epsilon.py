@@ -20,13 +20,12 @@
 
 #Updates 08/10/2021: got rid of the for loop within function pdf
 
-#Updates 08/11/2021: write the computation of verb likelihoods over three transitivity categories in a for loop
+#Updates 08/11/2021: write the computation of verb likelihoods over three transitivity categories in a for loop and later got rid of the for loop
 
 import math
 import numpy as np
 import itertools
 from operator import add
-
 
 def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
     
@@ -104,9 +103,11 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
         return M3k1term
     #list of functions
     calculate_Mk1 = [calculate_M1k1, calculate_M2k1, calculate_M3k1]
-    
-    for transitivity in range(3):
-    
+   
+    #did not define this function outside of function likelihoods because functions calculate_M1k1, calculate_M2k1, calculate_M3k1 
+    #are defined within function likelihoods and our function need to call those 
+    def calculate_M_likelihood(transitivity):
+        
         Mcomponent = []
         ## group by n1s
         for key, group in itertools.groupby(combinations, lambda x: x[0]):
@@ -147,8 +148,11 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
             Mcomponentsub = [(i-Mcomponent[0]) for i in Mcomponent]
 
         Mcomponentexp = [math.exp(i) for i in Mcomponentsub]
-        #instead of updating the value of M1likelihood, M2likelihood, M3likelihood, we append the calculated likekihood value to the list of Mlikelihood
-        Mlikelihood.append(Mcomponent[0] + np.log1p(sum(Mcomponentexp[1:])))
+        #instead of updating the value of M1likelihood, M2likelihood, M3likelihood, we return the calculated likekihood value
+        return Mcomponent[0] + np.log1p(sum(Mcomponentexp[1:]))
+    
+    #calculate likelihood over three categories
+    Mlikelihood = [calculate_M_likelihood(transitivity) for transitivity in range(3)]
 
     return Mlikelihood
 
