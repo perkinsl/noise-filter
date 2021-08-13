@@ -26,9 +26,13 @@
 #2. kept both delta and epsilon in the input argument and added boolean variable isDelta to input argument 
 #       to determine whether the current MH sampling is being done on delta or epsilon so that we can call function pdf with appropriate variables
 
+#Updates 08/12/2021: replaced code with accept function in MH_theta
+
 import math
 import random
 from pdf_delta_epsilon import pdf
+from pdf_theta import pdf_theta
+from MH_theta import accept
 
 def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
     
@@ -59,24 +63,9 @@ def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
 		
 		else:
 			p_MHvar_prime = pdf(data, models, delta, MHvar_prime, gammas)
-        
-		if p_MHvar_prime == float('-inf'):
-			MHvar = MHvar
-			p_MHvar = p_MHvar
-		
-		else:
-			#Accept proposal epsilonprime with acceptance probability A (in log space)
-			A = min(0, p_MHvar_prime-p_MHvar)
-		
-			if A == 0:
-				MHvar = MHvar_prime
-				p_MHvar = p_MHvar_prime
-
-			else:
-				x = random.random()
-				if x < math.exp(p_MHvar_prime-p_MHvar):
-					MHvar = MHvar_prime
-					p_MHvar = p_MHvar_prime
+            
+        #use accept function in MH_theta to decide whether to accept the new proposed MHvar value
+		MHvar = accept(MHvar, MHvar_prime, p_MHvar, p_MHvar_prime)
 				
 		timelog.append(MHvar)
 		
