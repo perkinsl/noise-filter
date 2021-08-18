@@ -25,7 +25,7 @@ from operator import add
 def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 	verbposteriors = []
-	M3dict = {}
+	
 		## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
 		## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
 	for verb in range(0, len(data)):
@@ -66,19 +66,14 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 			#implementing the calculation for p(k1 | n1, theta) (Binomial(n, theta)), in log space
 			def calculate_M3k1(n1, k1):
-				if (n1, k1) in M3dict:
-					M3k1term = M3dict[(n1, k1)]
-				else:
-					if k1 <= n1:
-						if ((k1), (n1)) in gammas:
-							M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta) + ((n1)-(k1))*np.log(1-theta)
-						else:
-							gammas[((k1), (n1))] = math.lgamma(n1+1)-(math.lgamma(k1+1)+math.lgamma((n1)-(k1)+1))
-							M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta))
+				if k1 <= n1:
+					if ((k1), (n1)) in gammas:
+						M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta) + ((n1)-(k1))*np.log(1-theta)
 					else:
-						M3k1term = float('-inf')
-
-					M3dict[(n1, k1)] = M3k1term
+						gammas[((k1), (n1))] = math.lgamma(n1+1)-(math.lgamma(k1+1)+math.lgamma((n1)-(k1)+1))
+						M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta))
+				else:
+					M3k1term = float('-inf')
 
 				return M3k1term
 
