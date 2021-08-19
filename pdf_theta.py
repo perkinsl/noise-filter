@@ -25,7 +25,7 @@ from operator import add
 def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 	verbposteriors = []
-	
+
 		## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
 		## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
 	for verb in range(0, len(data)):
@@ -35,7 +35,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 			M3likelihood = float('-inf')
 		elif theta >= 1:
 			M3likelihood = float('-inf')
-		
+
 		else:
 
 			verbcount = data[verb]
@@ -128,5 +128,7 @@ def pdf_theta(data, delta, epsilon, thetas, gammas):
 
 	# return a vector of the probabilities of each theta value for each verb, in log space
 	p = verbposteriors
-
+	print(p)
 	return p
+data = [[19, 20], [9, 10] ,[1, 20], [2, 40], [10, 20], [3, 10]]
+pdf_theta(data, 0.01, 0.01, [0.95, 0.9, 0.05, 0.05, 0.5, 0.3], {})
