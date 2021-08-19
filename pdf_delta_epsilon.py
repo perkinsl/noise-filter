@@ -20,20 +20,19 @@
 
 #Updates 08/10/2021: got rid of the for loop within function pdf
 
+#Updates 08/11/2021: write the computation of verb likelihoods over three transitivity categories in a for loop and later got rid of the for loop
+
 import math
 import numpy as np
 import itertools
 from operator import add
-
 
 def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
     
     k = verb[0]
     n = verb[1]
     
-    M1component = []
-    M2component = []
-    M3component = []
+    Mlikelihood = []
     
     ## likelihood p(k|T, epsilon, delta)
     ## create tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
@@ -102,91 +101,60 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
             M3dict[(n1, k1)] = M3k1term
         
         return M3k1term
+    #list of functions
+    calculate_Mk1 = [calculate_M1k1, calculate_M2k1, calculate_M3k1]
+   
+    #did not define this function outside of function likelihoods because functions calculate_M1k1, calculate_M2k1, calculate_M3k1 
+    #are defined within function likelihoods and our function need to call those 
+    def calculate_M_likelihood(transitivity):
+        
+        Mcomponent = []
+        ## group by n1s
+        for key, group in itertools.groupby(combinations, lambda x: x[0]):
+            ngroup = list(group)
+            k0term = list(itertools.starmap(calculate_k0, ngroup))
+            #choose which calculate_Mk1 function to call based on the transitivity category
+            Mk1term = list(itertools.starmap(calculate_Mk1[transitivity], ngroup))
+        
+            Mterm = list(map(add, Mk1term, k0term))
+        
+            Mterm.sort(reverse=True)
+        
+            if Mterm[0] == float('-inf'):
+                Mtermsub = Mterm
+        
+            else:
+                Mtermsub = [(i-Mterm[0]) for i in Mterm]
     
-    ## group by n1s
-    for key, group in itertools.groupby(combinations, lambda x: x[0]):
-        ngroup = list(group)
-        k0term = list(itertools.starmap(calculate_k0, ngroup))
-        M1k1term = list(itertools.starmap(calculate_M1k1, ngroup))
-        M2k1term = list(itertools.starmap(calculate_M2k1, ngroup))
-        M3k1term = list(itertools.starmap(calculate_M3k1, ngroup))
+            Mtermexp = [math.exp(i) for i in Mtermsub]
         
-        M1term = list(map(add, M1k1term, k0term))
-        M2term = list(map(add, M2k1term, k0term))
-        M3term = list(map(add, M3k1term, k0term))
+            Mlogsum = Mterm[0] + np.log1p(sum(Mtermexp[1:]))
         
-        M1term.sort(reverse=True)
-        M2term.sort(reverse=True)
-        M3term.sort(reverse=True)
-        
-        if M1term[0] == float('-inf'):
-            M1termsub = M1term
-        
+            if (key, n) in gammas:
+                noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
+
+            else:
+                gammas[(key, n)] = math.lgamma(n+1)-(math.lgamma(key+1)+math.lgamma(n-key+1))
+                noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
+
+            Mcomponent.append(Mlogsum + noise)
+
+        Mcomponent.sort(reverse=True)
+
+        if Mcomponent[0] == float('-inf'):
+            Mcomponentsub = Mcomponent
+    
         else:
-            M1termsub = [(i-M1term[0]) for i in M1term]
-        
-        if M2term[0] == float('-inf'):
-            M2termsub = M2term
-        
-        else:
-            M2termsub = [(i-M2term[0]) for i in M2term]
-        
-        if M3term[0] == float('-inf'):
-            M3termsub = M3term
-        
-        else:
-            M3termsub = [(i-M3term[0]) for i in M3term]
+            Mcomponentsub = [(i-Mcomponent[0]) for i in Mcomponent]
+
+        Mcomponentexp = [math.exp(i) for i in Mcomponentsub]
+        #instead of updating the value of M1likelihood, M2likelihood, M3likelihood, we return the calculated likekihood value
+        return Mcomponent[0] + np.log1p(sum(Mcomponentexp[1:]))
     
-        M1termexp = [math.exp(i) for i in M1termsub]
-        M2termexp = [math.exp(i) for i in M2termsub]
-        M3termexp = [math.exp(i) for i in M3termsub]
-        
-        M1logsum = M1term[0] + np.log1p(sum(M1termexp[1:]))
-        M2logsum = M2term[0] + np.log1p(sum(M2termexp[1:]))
-        M3logsum = M3term[0] + np.log1p(sum(M3termexp[1:]))
-        
-        if (key, n) in gammas:
-            noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
+    #calculate likelihood over three categories
+    Mlikelihood = [calculate_M_likelihood(transitivity) for transitivity in range(3)]
 
-        else:
-            gammas[(key, n)] = math.lgamma(n+1)-(math.lgamma(key+1)+math.lgamma(n-key+1))
-            noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
-
-        M1component.append(M1logsum + noise)
-        M2component.append(M2logsum + noise)
-        M3component.append(M3logsum + noise)
-
-    M1component.sort(reverse=True)
-    M2component.sort(reverse=True)
-    M3component.sort(reverse=True)
-
-    if M1component[0] == float('-inf'):
-        M1componentsub = M1component
-    
-    else:
-        M1componentsub = [(i-M1component[0]) for i in M1component]
-
-    if M2component[0] == float('-inf'):
-        M2componentsub = M2component
-    
-    else:
-        M2componentsub = [(i-M2component[0]) for i in M2component]
-
-    if M3component[0] == float('-inf'):
-        M3componentsub = M3component
-    
-    else:
-        M3componentsub = [(i-M3component[0]) for i in M3component]
-
-    M1componentexp = [math.exp(i) for i in M1componentsub]
-    M2componentexp = [math.exp(i) for i in M2componentsub]
-    M3componentexp = [math.exp(i) for i in M3componentsub]
-
-    M1likelihood = M1component[0] + np.log1p(sum(M1componentexp[1:]))
-    M2likelihood = M2component[0] + np.log1p(sum(M2componentexp[1:]))
-    M3likelihood = M3component[0] + np.log1p(sum(M3componentexp[1:]))
-
-    return [M1likelihood, M2likelihood, M3likelihood]
+    return Mlikelihood
 
 def likelihood_given_M(verbNumber, data, models, delta, epsilon, gammas, M1dict, M2dict, M3dict):
     
