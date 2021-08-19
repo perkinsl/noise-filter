@@ -44,15 +44,19 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 	else:
 
 		verbcount = verb
+		print(verbcount)
 		k = verbcount[0]
 		n = verbcount[1]
+		print("n=",n)
 
 
 		M3component = []
 
 		## create (n1, k1) tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
 		## equivalent to "for n1 in range (0, n+1) for k1 in range (0, k+1)"
+		print(n+1)
 		n1 = range(n+1)
+		print(n1)
 		k1 = range(k+1)
 		combinations = list(itertools.product(n1, k1))
 		## implementing Equation (9) in Perkins, Feldman & Lidz: p(k0|n0, delta), in log space
