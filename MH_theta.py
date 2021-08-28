@@ -54,14 +54,14 @@ def MH_theta(data, delta, epsilon, gammas, iterations):
 
 		#Use pdf_theta to calculate logs of height of theta on curve proportional to pdf over epsilon
 		#p_thetas = pdf_theta(data, delta, epsilon, thetas, gammas)
-		p_thetas = [pdf_theta_one_verb(data[i], delta, epsilon, thetas[i], gammas) for j in range(0, len(thetas))]
+		p_thetas = [pdf_theta_one_verb(data[j], delta, epsilon, thetas[j], gammas) for j in range(0, len(thetas))]
 		#Sample a new value of theta for each verb from a proposal distribution Q, a Gaussian
 		#with mu = theta and sigma = 0.25
 		thetaprimes = [random.gauss(thetas[j], 0.25) for j in range(0, len(thetas))]
 		#print('theta_primes', thetaprimes)
 
 		#Use pdf_theta to calculate logs of height of each thetaprime on curve proportional to pdf over theta
-		p_thetaprimes = [pdf_theta_one_verb(data[i], delta, epsilon, thetaprimes[i], gammas) for j in range(0, len(thetas))]
+		p_thetaprimes = [pdf_theta_one_verb(data[j], delta, epsilon, thetaprimes[j], gammas) for j in range(0, len(thetas))]
 		#print('p_thetaprimes', p_thetaprimes)
 
 		#Decide whether to accept each new value of theta using acceptance function
@@ -72,4 +72,4 @@ def MH_theta(data, delta, epsilon, gammas, iterations):
 
 	return timelog
 data = [[19, 20], [9, 10] ,[1, 20], [2, 40], [10, 20], [3, 10]]
-MH_theta(data, 0.01, 0.01, {}, 10)
+MH_theta(data, 0.01, 0.01, {}, 20)

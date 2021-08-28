@@ -44,19 +44,17 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 	else:
 
 		verbcount = verb
-		print(verbcount)
 		k = verbcount[0]
 		n = verbcount[1]
-		print("n=",n)
+
 
 
 		M3component = []
 
 		## create (n1, k1) tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
 		## equivalent to "for n1 in range (0, n+1) for k1 in range (0, k+1)"
-		print(n+1)
+
 		n1 = range(n+1)
-		print(n1)
 		k1 = range(k+1)
 		combinations = list(itertools.product(n1, k1))
 		## implementing Equation (9) in Perkins, Feldman & Lidz: p(k0|n0, delta), in log space
@@ -134,7 +132,21 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 		M3likelihood = M3component[0] + np.log1p(sum(M3componentexp[1:]))
 	return M3likelihood
 
-data = [[19, 20], [9, 10] ,[1, 20], [2, 40], [10, 20], [3, 10]]
-data1 = [19,20]
+#data = [[19, 20], [9, 10] ,[1, 20], [2, 40], [10, 20], [3, 10]]
+data = [[19, 20], [10, 10], [1, 20], [1, 40], [10, 20], [4, 10]]
+data3 = [[16, 20], [8, 10], [4, 20], [8, 40], [10, 20], [3, 10]]
+thetas = [0.95, 1.0, 0.05, 0.025, 0.5, 0.4]
+thetas3 = [0.8, 0.8, 0.2, 0.2, 0.5, 0.3]
+data4 = [[14, 20], [7, 10], [6, 20], [12, 40], [10, 20], [4, 10]]
+thetas4 = [0.7, 0.7,0.3, 0.3, 0.5, 0.4]
+data5 = [[11, 20],  [5, 10], [9, 20], [19, 40], [10, 20], [5, 10]]
+thetas5 = [0.55, 0.5, 0.45, 0.475, 0.5, 0.5]
+data6 = [[19, 20], [38, 40], [14, 15], [10, 10], [29, 30], [23, 25]]
+thetas6 = [0.95, 0.95, 0.933, 1.0, 0.966, 0.92]
+data7 =[[1, 20], [2, 40], [0, 15], [1, 10], [2, 30], [1, 25]]
+thetas7 = [0.05, 0.05, 0, 0.1, 0.0667, 0.04]
+data8 = [[7, 20], [6, 40], [7, 15], [4, 10], [7, 30], [19, 25]]
+thetas8 = [0.35, 0.15, 0.4667, 0.4, 0.233, 0.76]
+
 # pdf_theta_one_verb(data1, 0.01, 0.01, 0.95, {})
-pdf_theta(data, 0.01, 0.01, [0.95, 0.9, 0.05, 0.05, 0.5, 0.3], {})
+pdf_theta(data8, 0.01, 0.01, thetas8, {})
