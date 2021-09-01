@@ -15,6 +15,8 @@
 #   be an integer value
 #Returns list of lists of theta values for each verb after running specified number of iterations
 
+#Updates 08/24/2021: make accept function return a tuple of the updated variable value and its corresponding acceptance probability
+
 import math
 import random
 from pdf_theta import pdf_theta
@@ -26,33 +28,33 @@ def accept(var, var_prime, p, p_prime):
 
 	#Reject impossible proposals
 	if p_prime == float('-inf'):
-		return var
+		return (var, p)
 
 	#Accept possible proposal var_prime with acceptance probability A (in log space)
 	else:
 		A = min(0, p_prime-p)
 		
 		if A == 0:
-			return var_prime
+			return (var_prime, p_prime)
 
 		else:
 			x = random.random()
 			if x < math.exp(p_prime-p):
-				return var_prime
+				return (var_prime, p_prime)
 			else:
-				return var
+				return (var, p)
 		
 def MH_theta(data, delta, epsilon, gammas, iterations):
 
 	#Initialize random values of thetas for each verb
 	thetas = [random.random() for i in range(0, len(data))]
 	timelog = [thetas]
+    
+    	#Use pdf_theta to calculate logs of height of theta on curve proportional to pdf over epsilon
+	p_thetas = pdf_theta(data, delta, epsilon, thetas, gammas)
 	
 	for i in range(1, iterations):
 		print('iteration', i)
-
-		#Use pdf_theta to calculate logs of height of theta on curve proportional to pdf over epsilon
-		p_thetas = pdf_theta(data, delta, epsilon, thetas, gammas)
 
 		#Sample a new value of theta for each verb from a proposal distribution Q, a Gaussian
 		#with mu = theta and sigma = 0.25
@@ -64,7 +66,11 @@ def MH_theta(data, delta, epsilon, gammas, iterations):
 		#print('p_thetaprimes', p_thetaprimes)
 
 		#Decide whether to accept each new value of theta using acceptance function
-		thetas = [accept(thetas[j], thetaprimes[j], p_thetas[j], p_thetaprimes[j]) for j in range(0, len(thetas))]
+        	#a list of 2-element tuples (theta value and corresponding probability)
+		thetas_and_probs = [accept(thetas[j], thetaprimes[j], p_thetas[j], p_thetaprimes[j]) for j in range(0, len(thetas))]
+		thetas = [theta_and_prob[0] for theta_and_prob in thetas_and_probs]
+		p_thetas = [theta_and_prob[1] for theta_and_prob in thetas_and_probs]
+        
 		print(thetas)
 		
 		timelog.append(thetas)
