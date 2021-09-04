@@ -28,7 +28,7 @@ def accept(var, var_prime, p, p_prime):
 
 				return (var, p)
 
-#Need to pass data, models, delta, epsilon, gammas, iteration varaibles to call pdf functions
+#Need to pass data, models, delta, epsilon, gammas, verbNumber varaibles to call pdf functions
 def propose_and_accept(data, models, delta, epsilon, gammas, verbNumber, var, p_var, flag):
     
     #Sample a new value of var from a proposal distribution Q, a Gaussian
@@ -42,8 +42,8 @@ def propose_and_accept(data, models, delta, epsilon, gammas, verbNumber, var, p_
     elif flag == 1:
         p_var_prime = pdf(data, models, delta, var_prime, gammas)
     else:
-        #Since pdf_theta_one_verb takes in one verb instead of the list of verbs like pdf function does,
-        #we need to keep track of which verb we're taking, so need to pass the iteration variable
+        #Since pdf_theta_one_verb takes in one verb instead of the list of verbs like pdf delta and epsilon function does,
+        #we need to keep track of which verb we're taking, so need to pass the verbNumber variable
         p_var_prime = pdf_theta_one_verb(data[verbNumber], delta, epsilon, var_prime, gammas)
     
     #returns both var and p_var to be updated outside this function
