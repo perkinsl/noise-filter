@@ -28,12 +28,12 @@
 
 #Updates 08/12/2021: replaced code with accept function in MH_theta
 #Updates 08/24/2021: update p_MHvar after calling accept function instead of doing computation every time at the beginning of for loop
+#Updates 09/03/2021: replaced code with propose_and_accept function
 
 import math
 import random
 from pdf_delta_epsilon import pdf
-from pdf_theta import pdf_theta
-from MH_theta import accept
+from propose_and_accept import propose_and_accept
 
 def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
     
@@ -51,26 +51,16 @@ def MH(data, models, delta, epsilon, gammas, iterations, isDelta):
 	
 	for i in range(1, iterations):
 		
-		#Sample a new value of epsilon from a proposal distribution Q, a Gaussian
-		#with mu = epsilon and sigma = 0.25
-		MHvar_prime = random.gauss(MHvar, 0.25)
-		#print('epsilonprime', epsilonprime)
-		
-        	#Determine whether the variable being sampled with MH sampling is delta or epsilon
 		if isDelta:
-			#Use pdf.m to calculate logs of height of epsilonprime on curve proportional to pdf over epsilon
-			p_MHvar_prime = pdf(data, models, MHvar_prime, epsilon, gammas)
-			#print('p_epsilonprime', p_epsilonprime)
-		
+			flag = 0
 		else:
-			p_MHvar_prime = pdf(data, models, delta, MHvar_prime, gammas)
-            
-        	#use accept function in MH_theta to decide whether to accept the new proposed MHvar value
-		MHvar_and_prob = accept(MHvar, MHvar_prime, p_MHvar, p_MHvar_prime)
+			flag = 1
+        
+        	#set verbNumber equal to 0 since it's never used for pdf delta and epsilon
+		MHvar_and_prob = propose_and_accept(data, models, delta, epsilon, gammas, 0, MHvar, p_MHvar, flag)
 		MHvar = MHvar_and_prob[0]
 		p_MHvar = MHvar_and_prob[1]
 				
 		timelog.append(MHvar)
-		
+        
 	return timelog
-
