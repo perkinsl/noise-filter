@@ -34,36 +34,39 @@ import random
 from pdf_delta_epsilon import pdf
 from pdf_theta import pdf_theta
 from pdf_theta1 import pdf_theta_one_verb
-from MH_theta import accept
+from propose_and_accept import accept, propose_and_accept
 
 def MH(data, models, delta, epsilon, gammas, iterations, flag):
 
 	#Initialize a random value of epsilon/delta
-    if flag < 2:
-        MHvar = random.random()
-        sampled_results = [MHvar]
-    else:
-        thetas = [random.random() for i in range(0, len(data))]
-        sampled_results = [thetas]
+	if flag < 2:
+		MHvar = random.random()
+		sampled_results = [MHvar]
+	else:
+		thetas = [random.random() for i in range(0, len(data))]
+		sampled_results = [thetas]
 
 
-    	#Determine whether the variable being sampled with MH sampling is delta, epsilon, or theta
+		#Determine whether the variable being sampled with MH sampling is delta, epsilon, or theta
 	if flag == 0:
 		#Use pdf.m to calculate logs of height of epsilon on curve proportional to pdf over epsilon
 		p_MHvar = pdf(data, models, MHvar, epsilon, gammas)
 	elif flag == 1:
 		p_MHvar = pdf(data, models, delta, MHvar, gammas)
-    else:
-        p_thetas = pdf_theta(data, delta, epsilon, thetas, gammas)
+	else:
+		p_thetas = pdf_theta(data, delta, epsilon, thetas, gammas)
 
 	for i in range(1, iterations):
 
 		#Sample a new value of epsilon from a proposal distribution Q, a Gaussian
 		#with mu = epsilon and sigma = 0.25
-        if flag < 2:
-            result = propose_and_accept(MHvar, p_MHvar, flag)
-        #this function returns a new MHvar
-        else:
-            result = [propose_and_accept(thetas[j], p_theta[j], flag) for j in range(0, len(thetas))]
-		sampled_results.append(result[0])
+		if flag < 2:
+			result = propose_and_accept(data, models, delta, epsilon, gammas, 0, var, p_var, flag)
+			sampled_results.append(result)
+		#this function returns a new MHvar
+		else:
+			result = [propose_and_accept(data, models, delta, epsilon, gammas, j, thetas[j], p_theta[j], flag) for j in range(0, len(thetas))]
+			thetas_to_add = [result[0] for i in result]
+			p_thetas = [result[1] for i in result]
+			sampled_results.append(thetas_to_add)
 	return sampled_results
