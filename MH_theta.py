@@ -45,7 +45,7 @@ def accept(var, var_prime, p, p_prime):
 			else:
 
 				return (var, p)
-		
+
 
 def MH_theta(data, delta, epsilon, gammas, iterations):
 
@@ -53,10 +53,10 @@ def MH_theta(data, delta, epsilon, gammas, iterations):
 	thetas = [random.random() for i in range(0, len(data))]
 	timelog = [thetas]
 
-    
+
     	#Use pdf_theta to calculate logs of height of theta on curve proportional to pdf over epsilon
 	p_thetas = pdf_theta(data, delta, epsilon, thetas, gammas)
-	
+
 	for i in range(1, iterations):
 		print('iteration', i)
 
@@ -74,7 +74,7 @@ def MH_theta(data, delta, epsilon, gammas, iterations):
 		thetas_and_probs = [accept(thetas[j], thetaprimes[j], p_thetas[j], p_thetaprimes[j]) for j in range(0, len(thetas))]
 		thetas = [theta_and_prob[0] for theta_and_prob in thetas_and_probs]
 		p_thetas = [theta_and_prob[1] for theta_and_prob in thetas_and_probs]
-        
+
 		print(thetas)
 
 		timelog.append(thetas)
