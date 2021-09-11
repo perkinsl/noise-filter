@@ -45,6 +45,7 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 	else:
 		#initialize a random value of theta for each verb if sampling for theta
 		thetas = [random.random() for i in range(0, len(data))]
+		print("THETAS INITIALLY=", thetas)
 		sampled_results = [thetas]
 
 
@@ -59,14 +60,15 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 	else:
 		p_thetas = [pdf_theta_one_verb(data[j], delta, epsilon, thetas[j], gammas) for j in range(0, len(thetas))]
 		print("p_thetas=  ", p_thetas)
+
+
 	for i in range(1, iterations):
 		print("-------------\niteration", i)
-
-
+		#note that this loop will actually run (iterations-1) times. This is because we want to consider
+		#the initial random samples the 'first' iteration rather than the first time this loop runs.
 		if flag < 2:
 			#if we are using MH sampling for epsilon or delta, just call propose_and_accept one time per iteration
 			result = propose_and_accept(data, verb_categories, delta, epsilon, gammas, 0,  MHvar, p_MHvar, flag)
-			print("result =", result, "\n\n")
 			MHvar = result[0] #since propose_and_accept returns a tuple, set first element in tuple as MHvar
 			p_MHvar = result[1] #set second element in tuple as p_MHvar
 			#add the result to the sampled_results list
@@ -77,14 +79,13 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 		else:
 			#for theta, call propose_and_accept on each theta value (ie, for each verb)
 			result = [propose_and_accept(data, verb_categories, delta, epsilon, gammas, j, thetas[j], p_thetas[j], flag) for j in range(0, len(thetas))]
-			# print("result =", result, "\n\n")
 			thetas = [i[0] for i in result] #propose_and_accept returns a list of tuples, set first element of each tuple as thetas list
-			print("thetas= ", thetas, )
+			print("thetas = ", thetas )
 			p_thetas = [i[1] for i in result] #set second element of each tuple as p_thetas list
 			sampled_results.append(thetas) #add the accepted thetas to results list
 
 	return sampled_results
-data = [[19, 20], [10, 10]]
+data = [[19, 20]]
 epsilon = [random.random()]
 delta = [random.random()]
 verb_categories = []

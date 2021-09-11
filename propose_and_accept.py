@@ -8,10 +8,12 @@ from pdf_theta1 import pdf_theta_one_verb
 ## and the probabilities of each in the function proportional to the posterior pdf
 ## and decides whether to accept the new proposed variable, or keep the old one
 def accept(var, var_prime, p, p_prime):
-
+	print("var: ", var, "p_var: ", math.exp(p))
+	print("proposed new value:", var_prime)
+	print("p_var_prime", math.exp(p_prime))
 	#Reject impossible proposals
 	if p_prime == float('-inf'):
-		print("var,p=", var, p)
+		print("REJECTED bc p 0")
 		return (var, p)
 
 	#Accept possible proposal var_prime with acceptance probability A (in log space)
@@ -19,19 +21,24 @@ def accept(var, var_prime, p, p_prime):
 		A = min(0, p_prime-p)
 
 		if A == 0:
+			print("var_prime, p_prime", var_prime, p_prime)
+			print("ACCEPTED NEW VALUE")
 			return (var_prime, p_prime)
 
 		else:
 			x = random.random()
 			if x < math.exp(p_prime-p):
+				print("var_prime, p_prime", var_prime, p_prime)
+				print("ACCEPTED NEW VALUE")
 				return (var_prime, p_prime)
 			else:
-
+				print("var_prime, p_prime", var_prime, p_prime)
+				print("REJECTED")
 				return (var, p)
 
 #Need to pass data, models, delta, epsilon, gammas, iteration varaibles to call pdf functions
 def propose_and_accept(data, models, delta, epsilon, gammas, verbNumber, var, p_var, flag):
-	
+
 
 	#Sample a new value of var from a proposal distribution Q, a Gaussian
 	#with mu = var and sigma = 0.25
@@ -50,6 +57,5 @@ def propose_and_accept(data, models, delta, epsilon, gammas, verbNumber, var, p_
 		#Since pdf_theta_one_verb takes in one verb instead of the list of verbs like pdf function does,
 		#we need to keep track of which verb we're taking, so need to pass the iteration variable
 		p_var_prime = pdf_theta_one_verb(data[verbNumber], delta, epsilon, var_prime, gammas)
-
 	#returns both var and p_var to be updated outside this function
 	return accept(var, var_prime, p_var, p_var_prime)
