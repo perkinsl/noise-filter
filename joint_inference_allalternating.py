@@ -7,8 +7,8 @@
     #data, a decimal between 0 and 1
 #At each iteration, runs 10 steps of the Metropolis-Hastings simulation in
     #MH_epsilon and MH_delta, and uses the 10th values generated for next iteration
-#Data: a list of length n where each item is a 2-element list corresponding 
-#   to counts of observations for each of n verbs. In each sublist, the first element 
+#Data: a list of length n where each item is a 2-element list corresponding
+#   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
 #Iterations: number of iterations to run simulation, must be an integer value
 #Returns epsilon, a list of length n of epsilon values, delta, a list of length n of delta values,
@@ -25,83 +25,83 @@ def joint_inference(data, iterations):
 	#Randomly initialize epsilon and delta
 	epsilon = [random.random()]
 	delta = [random.random()]
-	models = []
+	verb_categories = []
 	gammas = {}
-	
+
 	for i in range(0, iterations):
-	
+
 		print('iteration', i)
 		# for timing iterations:
 		tic = time.perf_counter()
 
 		#Set all transitivity values to 3 (alternating class)
-		newmodels = [3]*len(data)
-		models.append(newmodels)		
-		
+		newverb_categories = [3]*len(data)
+		verb_categories.append(newverb_categories)
+
 		#Run Metropolis-Hastings simulation 10 times to infer new epsilon
 		#from current delta and model values
-		
-		timelogepsilon = MH_epsilon(data, models[i], delta[i], gammas, 10)
+
+		timelogepsilon = MH_epsilon(data, verb_categories[i], delta[i], gammas, 10)
 		newepsilon = timelogepsilon[9]
 		print('epsilon', newepsilon)
 		epsilon.append(newepsilon)
-		
+
 		#Run Metropolis-Hastings simulation 10 times to infer new delta
 		#from new epsilon and model values
-		
-		timelogdelta = MH_delta(data, models[i], newepsilon, gammas, 10)
+
+		timelogdelta = MH_delta(data, verb_categories[i], newepsilon, gammas, 10)
 		newdelta = timelogdelta[9]
 		print('delta', newdelta)
 		delta.append(newdelta)
-		
+
 		## for timing iterations:
 		toc = time.perf_counter()
 		print('Iteration time:', (toc - tic), 'seconds')
-	
-	return models, epsilon, delta
+
+	return verb_categories, epsilon, delta
 
 #Run joint_inference over 1000 iterations and plot probability distribution over
-#models and epsilon
+#verb_categories and epsilon
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 def plot_joint_inference(data):
-	
-	models, epsilon, delta = joint_inference(data, 1000)
-	
+
+	verb_categories, epsilon, delta = joint_inference(data, 1000)
+
 	#Use every 10th value from last 500 iterations as samples
 	modelsamples = models[501::10]
 	epsilonsamples = epsilon[501::10]
 	np.savetxt('epsilon', epsilonsamples)
 	deltasamples = delta[501::10]
 	np.savetxt('delta', deltasamples)
-	
+
 	#Plot histogram of epsilon samples
 	fig = plt.figure()
 	ax = fig.add_subplot(111)
 	ax.set_title('Distribution over Epsilon')
 	ax.hist(epsilonsamples)
 	fig.savefig('epsilon.png')
-	
+
 	#Plot histogram of delta samples
 	fig = plt.figure()
 	ax = fig.add_subplot(111)
 	ax.set_title('Distribution over Delta')
 	ax.hist(deltasamples)
 	fig.savefig('delta.png')
-	
+
 	#Display table containing counts of model assignments per model for each verb
 	modelstransposed = list(map(list, zip(*modelsamples)))
 	modeltable = []
-	
+
 	for i in range(0, len(data)):
 		histcounts = np.histogram(modelstransposed[i], bins = [1, 2, 3, 4])
 		modeltable.append(histcounts[0])
-	
+
 	modeltable = np.asarray(modeltable)
 	np.savetxt('modeltable', modeltable, fmt='%1i')
-	
+
 	return modeltable
 
 #data containing vector of verb counts from CHILDES Treebank

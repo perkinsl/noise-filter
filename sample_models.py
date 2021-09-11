@@ -1,9 +1,9 @@
 #Simulates a learner encountering a corpus of observations of many verbs (data)
 #With known epsilon and delta (a value between 0 and 1)
-#Data: a list of length n where each item is a 2-element list corresponding 
-#   to counts of observations for each of n verbs. In each sublist, the first element 
+#Data: a list of length n where each item is a 2-element list corresponding
+#   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
-#Gammas: dictionary of combination terms from binomial distribution equations, 
+#Gammas: dictionary of combination terms from binomial distribution equations,
 #    passed on to each iteration of Gibbs sampling in joint_inference.py
 #Infers posterior probabilities on models (aka, verb transitivity classes) for each verb in data:
 #    M1: verb is fully transitive (theta = 1)
@@ -41,7 +41,7 @@ def calculate_model(verbNumber, data, epsilon, delta, gammas, M1dict, M2dict, M3
 
     #keeping this intermediate step here because it's needed when calculating models_posterior
     dems = [proportionate_model_posterior(i, verbLikelihoods) for i in range(3)]
-    
+
     demsexp = [math.exp(dem) for dem in dems] # list comprehension: [fun(i) for i in list]
     denominator = np.log(sum(demsexp))
 
@@ -61,16 +61,16 @@ def calculate_model(verbNumber, data, epsilon, delta, gammas, M1dict, M2dict, M3
         return 3
 
 def sample_models(data, epsilon, delta, gammas):
-	models = []
+	verb_categories = []
 
 	## memoizing specific n1, k1 combinations for Equation (10) in Perkins, Feldman & Lidz
 	## because these will always produce the same result, regardless of the verb identity
 	M1dict = {}
 	M2dict = {}
 	M3dict = {}
-	
+
 	## loop through every verb in dataset and calculate posterior on transitivity models (T)
 	## following Equation (7) in Perkins, Feldman, & Lidz
-	models = [calculate_model(verb, data, epsilon, delta, gammas, M1dict, M2dict, M3dict) for verb in range(len(data))]
-			
-	return models
+	verb_categories = [calculate_model(verb, data, epsilon, delta, gammas, M1dict, M2dict, M3dict) for verb in range(len(data))]
+
+	return verb_categories

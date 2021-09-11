@@ -6,7 +6,7 @@
 #Data: a list of length n where each item is a 2-element list corresponding
 #   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
-#Models: a list of model values (1, 2, or 3) for each verb in the data
+#verb_categories: a list of model values (1, 2, or 3) for each verb in the data
 #   array, where each element in list corresponds to a row in the data
 #   array
 #Epsilon: a value from 0 to 1

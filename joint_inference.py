@@ -35,23 +35,23 @@ def joint_inference(data, iterations):
 		#Use current epsilon and delta to infer model values
 		newmodels = sample_models(data, epsilon[i], delta[i], gammas)
 		print('models', newmodels)
-		models.append(newmodels)
+		verb_categories.append(newmodels)
 
 		#Run Metropolis-Hastings simulation 10 times to infer new epsilon
 		#from current delta and model values
 		#MH sampling on epsilon, so boolean value is False
-		timelogepsilon = MH(data, models[i], delta[i], epsilon[i], gammas, 10, False)
+		timelogepsilon = MH(data, verb_categories[i], delta[i], epsilon[i], gammas, 10, False)
 		newepsilon = timelogepsilon[9]
 		epsilon.append(newepsilon)
 
 		#Run Metropolis-Hastings simulation 10 times to infer new delta
 		#from new epsilon and model values
 		#MH sampling on delta, so boolean value is True
-		timelogdelta = MH(data, models[i], delta[i], newepsilon, gammas, 10, True)
+		timelogdelta = MH(data, verb_categories[i], delta[i], newepsilon, gammas, 10, True)
 		newdelta = timelogdelta[9]
 		delta.append(newdelta)
 
-	return models, epsilon, delta
+	return verb_categories, epsilon, delta
 
 #Run joint_inference over 1000 iterations and plot probability distribution over
 #models and epsilon
@@ -61,10 +61,10 @@ import matplotlib.pyplot as plt
 
 def plot_joint_inference(data):
 
-	models, epsilon, delta = joint_inference(data, 1000)
+	verb_categories, epsilon, delta = joint_inference(data, 1000)
 
 	#Use every 10th value from last 500 iterations as samples
-	modelsamples = models[501::10]
+	modelsamples = verb_categories[501::10]
 	epsilonsamples = epsilon[501::10]
 	np.savetxt('epsilon', epsilonsamples)
 	deltasamples = delta[501::10]

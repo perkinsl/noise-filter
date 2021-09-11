@@ -36,8 +36,8 @@ def accept(var, var_prime, p, p_prime):
 				print("REJECTED")
 				return (var, p)
 
-#Need to pass data, models, delta, epsilon, gammas, iteration varaibles to call pdf functions
-def propose_and_accept(data, models, delta, epsilon, gammas, verbNumber, var, p_var, flag):
+#Need to pass data, verb_categories, delta, epsilon, gammas, iteration varaibles to call pdf functions
+def propose_and_accept(data, verb_categories, delta, epsilon, gammas, verbNumber, var, p_var, flag):
 
 
 	#Sample a new value of var from a proposal distribution Q, a Gaussian
@@ -48,10 +48,10 @@ def propose_and_accept(data, models, delta, epsilon, gammas, verbNumber, var, p_
 	#Call the corresponding pdf function according to the variable flag
 	if flag == 0:
 		#Use pdf to calculate logs of height of var_prime on curve proportional to pdf over var
-		p_var_prime = pdf(data, models, var_prime, epsilon, gammas)
+		p_var_prime = pdf(data, verb_categories, var_prime, epsilon, gammas)
 
 	elif flag == 1:
-		p_var_prime = pdf(data, models, delta, var_prime, gammas)
+		p_var_prime = pdf(data, verb_categories, delta, var_prime, gammas)
 
 	else:
 		#Since pdf_theta_one_verb takes in one verb instead of the list of verbs like pdf function does,
