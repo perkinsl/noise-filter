@@ -21,17 +21,19 @@
 
 #Updates 09/08/2021: added helper function proportionate_model_posterior to reduce repetitive code
 
+#Updates 09/13/2021: import likelihoods function created in a separate file, changed variable names dem to numerator
+
 import math
 import random
 import numpy as np
-from pdf_delta_epsilon import likelihoods
+from likelihoods import likelihoods
 
 # calculating denominator for Equation (7)
 def proportionate_model_posterior(transitivity, verbLikelihoods):
     # prior P(T) from Equation (7) is flat: 1/3 for each value of T
     Mprior = 1.0/3.0
-    demM = verbLikelihoods[transitivity] + np.log(Mprior)
-    return demM
+    numeratorM = verbLikelihoods[transitivity] + np.log(Mprior)
+    return numeratorM
 
 def calculate_model(verbNumber, data, epsilon, delta, gammas, M1dict, M2dict, M3dict):
 
@@ -40,14 +42,14 @@ def calculate_model(verbNumber, data, epsilon, delta, gammas, M1dict, M2dict, M3
     verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
 
     #keeping this intermediate step here because it's needed when calculating models_posterior
-    dems = [proportionate_model_posterior(i, verbLikelihoods) for i in range(3)]
+    numerators = [proportionate_model_posterior(i, verbLikelihoods) for i in range(3)]
 
-    demsexp = [math.exp(dem) for dem in dems] # list comprehension: [fun(i) for i in list]
-    denominator = np.log(sum(demsexp))
+    numeratorsexp = [math.exp(i) for i in numerators] # list comprehension: [fun(i) for i in list]
+    denominator = np.log(sum(numeratorsexp))
 
     # final result of Equation (7), in log space
     #no need to calculate M3 since the prediction will automatically fall into M3 if it doesn't fit into M1 and M2
-    models_posterior = [(dems[i] - denominator) for i in range(2)]
+    models_posterior = [(numerators[i] - denominator) for i in range(2)]
 
     #flips a biased coin weighted by posteriors on models to sample a model (ie, category) for each verb
     x = random.random()
@@ -72,5 +74,7 @@ def sample_models(data, epsilon, delta, gammas):
 	## loop through every verb in dataset and calculate posterior on transitivity models (T)
 	## following Equation (7) in Perkins, Feldman, & Lidz
 	verb_categories = [calculate_model(verb, data, epsilon, delta, gammas, M1dict, M2dict, M3dict) for verb in range(len(data))]
+
+	#print(verb_categories)    
 
 	return verb_categories
