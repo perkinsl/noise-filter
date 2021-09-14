@@ -15,10 +15,9 @@
 #Returns epsilon, a list of length n of epsilon values, delta, a list of length n of delta values,
 	#and models, an nxv matrix of model values for each of v verbs, for each of n iterations
 
-import math
 import random
 from sample_models import sample_models
-from MH_delta_epsilon import MH
+from MH import MH
 
 def joint_inference(data, iterations):
 
@@ -40,14 +39,14 @@ def joint_inference(data, iterations):
 		#Run Metropolis-Hastings simulation 10 times to infer new epsilon
 		#from current delta and model values
 		#MH sampling on epsilon, so boolean value is False
-		timelogepsilon = MH(data, verb_categories[i], delta[i], epsilon[i], gammas, 10, False)
+		timelogepsilon = MH(data, verb_categories[i], delta[i], epsilon[i], gammas, 10, 1)
 		newepsilon = timelogepsilon[9]
 		epsilon.append(newepsilon)
 
 		#Run Metropolis-Hastings simulation 10 times to infer new delta
 		#from new epsilon and model values
 		#MH sampling on delta, so boolean value is True
-		timelogdelta = MH(data, verb_categories[i], delta[i], newepsilon, gammas, 10, True)
+		timelogdelta = MH(data, verb_categories[i], delta[i], newepsilon, gammas, 10, 0)
 		newdelta = timelogdelta[9]
 		delta.append(newdelta)
 
