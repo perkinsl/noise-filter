@@ -78,7 +78,7 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 		#this function returns a new MHvar
 		else:
 			#for theta, call propose_and_accept on each theta value (ie, for each verb)
-			result = [propose_and_accept(data, verb_categories, delta, epsilon, gammas, thetas[j], p_thetas[j], flag) for j in range(0, len(thetas))]
+			result = [propose_and_accept(data[j], verb_categories, delta, epsilon, gammas, thetas[j], p_thetas[j], flag) for j in range(0, len(thetas))]
 			thetas = [i[0] for i in result] #propose_and_accept returns a list of tuples, set first element of each tuple as thetas list
 			#print("thetas = ", thetas )
 			p_thetas = [i[1] for i in result] #set second element of each tuple as p_thetas list
