@@ -17,9 +17,9 @@ SCRIPTS INCLUDE:
 
 - sample_models.py: calculates posterior probability for each transitivity category T for each verb in dataset, given epsilon and delta.
 
-- propose_and_accept.py: Proposes a new value sampled from a Gaussian with mu set to previous value and sigma = 0.25. Accepts with probability f(new value)/f(old value), where f is a function returning a value proportional to the posterior probability on epsilon and delta.
+- propose_and_accept.py: proposes a new value sampled from a Gaussian with mu set to previous value and sigma = 0.25. Accepts with probability f(new value)/f(old value), where f is a function returning a value proportional to the posterior probability on epsilon and delta.
 
-- likelihoods.py: calculates p(k|T,epsilon,delta), which is the likelihood of a given verb over three transitivity categories
+- likelihoods.py: calculates p(k|T,epsilon,delta), which is the likelihood of a given verb over three transitivity categories.
 
 - oracle_model.py: calculates posterior probability for each transitivity category T for each verb in dataset, given estimated oracle values for epsilon and delta. No Gibbs sampling is needed in this case, so this script bypasses those sampling steps. Outputs a .txt file summarizing these probabilities ("oraclemodeltable").
 
