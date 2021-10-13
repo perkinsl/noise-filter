@@ -22,18 +22,6 @@ from operator import add
 
 
 
-def pdf_theta(data, delta, epsilon, thetas, gammas):
-
-	verbposteriors = []
-		## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
-		## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
-	for verb in range(0, len(data)):
-		verbposteriors.append(pdf_theta_one_verb(data[verb], delta, epsilon, thetas[verb], gammas))
-
-	# return a vector of the probabilities of each theta value for each verb, in log space
-	p = verbposteriors
-	print(p)
-	return p
 
 def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 	if theta <= 0:
