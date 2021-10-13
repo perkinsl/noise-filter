@@ -9,16 +9,17 @@
 #verb_categories: a list of model values (1, 2, or 3) for each verb in the data
 #   array, where each element in list corresponds to a row in the data
 #   array
+#Delta: a value from 0 to 1
 #Epsilon: a value from 0 to 1
 #Iterations: number of iterations for Metropolis-Hastings simulation, must
 #   be an integer value
 #Conducts Metropolis-Hastings simulation over specified number of
-#   iterations: initializes a random value of delta, samples
+#   iterations: initializes a random value of delta/epsilon/theta, samples
 #   from a Gaussian proposal distribution to propose a new value of
-#   delta, and accepts that proposal depending on the posterior
-#   probabilities of delta and the proposed new delta given in the
-#   pdf_delta function
-#Returns vector of delta values after running specified number of iterations
+#   delta/epsilon/theta, and accepts that proposal depending on the posterior
+#   probabilities of delta/epsilon/theta and the proposed new delta/epsilon/theta given in the
+#   pdf_delta_epsilon/pdf_theta function
+#Returns vector of delta/epsilon/theta values after running specified number of iterations
 
 #Updates 07/29/2021:
 #1. merged MH_delta and MH_epsilon into one file (the two files are identical except for the input arguments

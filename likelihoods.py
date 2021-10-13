@@ -1,3 +1,17 @@
+#Simulates a learner encountering a corpus of observations of many verbs (data)
+#With known epsilon and delta (a value between 0 and 1)
+#verb: a 2-element list corresponding to counts of observations for each of n verbs. 
+#   In each sublist, the first element contains counts of direct objects 
+#   and the second contains total number of observations
+#Delta: a value from 0 to 1
+#Epsilon: a value from 0 to 1
+#Gammas: dictionary of combination terms from binomial distribution equations,
+#    passed on to each iteration of Gibbs sampling in joint_inference.py
+#Calculates the likelihoods of a verb over three verb categories:
+#   1: verb is fully transitive (theta = 1)
+#   2: verb is fully intransitive (theta = 0)
+#   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
+#Returns a 3-element vector of likelihoods of the given verb over three verb categories
 
 import math
 import numpy as np

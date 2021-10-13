@@ -1,3 +1,23 @@
+#Simulates a learner encountering a corpus of observations of many verbs (data)
+#With known models for verbs that generated that data:
+#   1: verb is fully transitive (theta = 1)
+#   2: verb is fully intransitive (theta = 0)
+#   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
+#Data: a list of length n where each item is a 2-element list corresponding
+#   to counts of observations for each of n verbs. In each sublist, the first element
+#   contains counts of direct objects and the second contains total number of observations
+#verb_categories: a list of model values (1, 2, or 3) for each verb in the data
+#   array, where each element in list corresponds to a row in the data
+#   array
+#Delta: a value from 0 to 1
+#Epsilon: a value from 0 to 1
+#Gammas: dictionary of combination terms from binomial distribution equations,
+#    passed on to each iteration of Gibbs sampling in joint_inference.py
+#samples from a Gaussian proposal distribution to propose a new value of
+#   delta/epsilon/theta, and accepts that proposal depending on the posterior
+#   probabilities of delta/epsilon/theta and the proposed new delta/epsilon/theta given in the
+#   pdf_delta_epsilon/pdf_theta function
+#Returns a two-element list of the accepted value and its acceptance probability
 
 #Updates 09/13/2021: removed verbNumber variable in input arguments of function propose_and_accept
 
