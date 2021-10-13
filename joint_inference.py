@@ -13,7 +13,7 @@
 #   contains counts of direct objects and the second contains total number of observations
 #Iterations: number of iterations to run simulation, must be an integer value
 #Returns epsilon, a list of length n of epsilon values, delta, a list of length n of delta values,
-	#and models, an nxv matrix of model values for each of v verbs, for each of n iterations
+	#and verb_categories, an nxv matrix of model values for each of v verbs, for each of n iterations
 
 import random
 from sample_categories import sample_categories
