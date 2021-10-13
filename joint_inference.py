@@ -31,20 +31,20 @@ def joint_inference(data, iterations):
 
 		print('iteration', i)
 
-		#Use current epsilon and delta to infer model values
-		newmodels = sample_models(data, epsilon[i], delta[i], gammas)
-		print('models', newmodels)
-		verb_categories.append(newmodels)
+		#Use current epsilon and delta to infer category values
+		newcategories = sample_models(data, epsilon[i], delta[i], gammas)
+		print('categories', newcategories)
+		verb_categories.append(newcategories)
 
 		#Run Metropolis-Hastings simulation 10 times to infer new epsilon
-		#from current delta and model values
+		#from current delta and category values
 		#MH sampling on epsilon, so boolean value is False
 		timelogepsilon = MH(data, verb_categories[i], delta[i], epsilon[i], gammas, 10, 1)
 		newepsilon = timelogepsilon[9]
 		epsilon.append(newepsilon)
 
 		#Run Metropolis-Hastings simulation 10 times to infer new delta
-		#from new epsilon and model values
+		#from new epsilon and category values
 		#MH sampling on delta, so boolean value is True
 		timelogdelta = MH(data, verb_categories[i], delta[i], newepsilon, gammas, 10, 0)
 		newdelta = timelogdelta[9]
@@ -53,7 +53,7 @@ def joint_inference(data, iterations):
 	return verb_categories, epsilon, delta
 
 #Run joint_inference over 1000 iterations and plot probability distribution over
-#models and epsilon
+#categories and epsilon
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -63,7 +63,7 @@ def plot_joint_inference(data):
 	verb_categories, epsilon, delta = joint_inference(data, 1000)
 
 	#Use every 10th value from last 500 iterations as samples
-	modelsamples = verb_categories[501::10]
+	categorysamples = verb_categories[501::10]
 	epsilonsamples = epsilon[501::10]
 	np.savetxt('epsilon', epsilonsamples)
 	deltasamples = delta[501::10]
@@ -83,18 +83,18 @@ def plot_joint_inference(data):
 	ax.hist(deltasamples)
 	fig.savefig('delta.png')
 
-	#Display table containing counts of model assignments per model for each verb
-	modelstransposed = list(map(list, zip(*modelsamples)))
-	modeltable = []
+	#Display table containing counts of category assignments per category for each verb
+	categoriestransposed = list(map(list, zip(*categorysamples)))
+	categorytable = []
 
 	for i in range(0, len(data)):
-		histcounts = np.histogram(modelstransposed[i], bins = [1, 2, 3, 4])
-		modeltable.append(histcounts[0])
+		histcounts = np.histogram(categories_transposed[i], bins = [1, 2, 3, 4])
+		category_table.append(histcounts[0])
 
-	modeltable = np.asarray(modeltable)
-	np.savetxt('modeltable', modeltable, fmt='%1i')
+	category_table = np.asarray(category_table)
+	np.savetxt('category_table', category_table, fmt='%1i')
 
-	return modeltable
+	return category_table
 
 #data containing vector of verb counts from CHILDES Treebank
 #first list element for each verb in the vector is counts of overt direct objects,
