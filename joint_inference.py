@@ -6,8 +6,8 @@
 #Infers a single value of epsilon and delta across all verbs in
     #data, a decimal between 0 and 1
 #At each iteration, runs 10 steps of the Metropolis-Hastings simulation in
-    #MH_epsilon and MH_delta, and uses the 10th values generated to sample model
-    #values using sample_models.m
+    #MH, and uses the 10th values generated to sample category
+    #values using sample_categories.m
 #Data: a list of length n where each item is a 2-element list corresponding
 #   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
@@ -16,7 +16,7 @@
 	#and models, an nxv matrix of model values for each of v verbs, for each of n iterations
 
 import random
-from sample_models import sample_models
+from sample_categories import sample_categories
 from MH import MH
 
 def joint_inference(data, iterations):
@@ -32,7 +32,7 @@ def joint_inference(data, iterations):
 		print('iteration', i)
 
 		#Use current epsilon and delta to infer category values
-		newcategories = sample_models(data, epsilon[i], delta[i], gammas)
+		newcategories = sample_categories(data, epsilon[i], delta[i], gammas)
 		print('categories', newcategories)
 		verb_categories.append(newcategories)
 
