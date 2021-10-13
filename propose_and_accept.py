@@ -19,7 +19,6 @@
 #   pdf_delta_epsilon/pdf_theta function
 #Returns a two-element list of the accepted value and its acceptance probability
 
-#Updates 09/13/2021: removed verbNumber variable in input arguments of function propose_and_accept
 
 import math
 import random
