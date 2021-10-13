@@ -33,7 +33,7 @@
 
 import random
 from pdf_delta_epsilon import pdf
-from pdf_theta1 import pdf_theta_one_verb
+from pdf_theta import pdf_theta_one_verb
 from propose_and_accept import propose_and_accept
 
 def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
