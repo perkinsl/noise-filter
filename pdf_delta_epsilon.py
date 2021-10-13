@@ -14,16 +14,6 @@
 #Returns p, height of function proportional to pdf of posterior probability
 #   on epsilon/delta, at specified value of epsilon/delta
 
-#Updates 07/29/2021: merged pdf_delta and pdf_epsilon (which are identical except for the order of delta and epsilon in the input argument) into one file and updated variable names in MH_delta and MH_epsilon
-
-#Updates 08/03/2021: create function likelihoods (identical to original pdf_delta and pdf_epsilon function from line 43 to line 198), which calculates the M1likehood,
-#    M2likelihood, M3likelihood of a given verb. Here, M1dict, M2dict, M3dict are passed in as arguments because we need to save these values globally, just like gammas.
-
-#Updates 08/10/2021: got rid of the for loop within function pdf
-
-#Updates 08/11/2021: write the computation of verb likelihoods over three transitivity categories in a for loop and later got rid of the for loop
-
-#Updates 09/13/2021: import likelihoods function created in a separate file
 
 from likelihoods import likelihoods
 
