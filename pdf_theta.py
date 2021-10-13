@@ -12,8 +12,8 @@
 # #   on delta, at specified value of delta
 #
 #
-# ## NOTE: a lot of this repeats code from sample_models.py
-# ## see comments in that code for details on how this corresponds to math in Perkins, Feldman, & Lidz
+# ## NOTE: a lot of this repeats code from sample_categories.py // THIS IS NO LONGER TRUE, RIGHT?
+# ## see comments in that code for details on how this corresponds to math in Perkins, Feldman, & Lidz // WE SHOULD PROBABLY COMMENT THE MATH HERE
 
 import math
 import numpy as np
