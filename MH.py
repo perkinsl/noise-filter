@@ -6,7 +6,7 @@
 #Data: a list of length n where each item is a 2-element list corresponding
 #   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
-#verb_categories: a list of model values (1, 2, or 3) for each verb in the data
+#verb_categories: a list of category values (1, 2, or 3) for each verb in the data
 #   array, where each element in list corresponds to a row in the data
 #   array
 #Delta: a value from 0 to 1
@@ -20,16 +20,6 @@
 #   probabilities of delta/epsilon/theta and the proposed new delta/epsilon/theta given in the
 #   pdf_delta_epsilon/pdf_theta function
 #Returns vector of delta/epsilon/theta values after running specified number of iterations
-
-#Updates 07/29/2021:
-#1. merged MH_delta and MH_epsilon into one file (the two files are identical except for the input arguments
-#       and when calculating the log pdf with constant delta/epsilon and updated epsilon/delta);
-#2. kept both delta and epsilon in the input argument and added boolean variable isDelta to input argument
-#       to determine whether the current MH sampling is being done on delta or epsilon so that we can call function pdf with appropriate variables
-
-#Updates 08/12/2021: replaced code with accept function in MH_theta
-#Updates 08/24/2021: update p_MHvar after calling accept function instead of doing computation every time at the beginning of for loop
-#Updates 09/13/2021: update function calls to propose_and_accept
 
 import random
 from pdf_delta_epsilon import pdf
