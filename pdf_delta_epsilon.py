@@ -9,9 +9,10 @@
 #verb_categories: a list of model values (1, 2, or 3) for each verb in the data
 #   array, where each element in list corresponds to a row in the data
 #   array
+#Epsilon: a decimal from 0 to 1
 #Delta: a decimal from 0 to 1
 #Returns p, height of function proportional to pdf of posterior probability
-#   on epsilon, at specified value of epsilon
+#   on epsilon/delta, at specified value of epsilon/delta
 
 #Updates 07/29/2021: merged pdf_delta and pdf_epsilon (which are identical except for the order of delta and epsilon in the input argument) into one file and updated variable names in MH_delta and MH_epsilon
 
