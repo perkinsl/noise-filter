@@ -24,7 +24,7 @@
 import math
 import random
 from pdf_delta_epsilon import pdf
-from pdf_theta1 import pdf_theta_one_verb
+from pdf_theta import pdf_theta_one_verb
 
 ## Acceptance function that takes a current variable, a new proposed variable
 ## and the probabilities of each in the function proportional to the posterior pdf
