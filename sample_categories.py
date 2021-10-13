@@ -15,13 +15,6 @@
 #   matrix, where each element in vector corresponds to a row in the data
 #   matrix
 
-#Updates 08/03/2021: replaced repeated code with function likelihoods
-
-#Updates 08/10/2021: got rid of the for loop within function sample_models
-
-#Updates 09/08/2021: added helper function proportionate_model_posterior to reduce repetitive code
-
-#Updates 09/13/2021: import likelihoods function created in a separate file, changed variable names dem to numerator
 
 import math
 import random
