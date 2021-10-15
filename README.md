@@ -22,7 +22,7 @@ SCRIPTS INCLUDE:
 
 - likelihoods.py: calculates p(k|T,epsilon,delta), which is the likelihood of a given verb over three transitivity categories.
 
-Dependencies: joint_inference.py calls MH.py and sample_categories.py. MH.py calls pdf_theta.py, pdf_delta_epsilon.py, and propose_and_accept.py. sample_categories.py calls likelihoods.py. pdf_theta.py has no dependencies on other scripts. pdf_delta_epsilon calls likelihoods.py. propose_and_accept calls pdf_theta.py and pdf_delta_epsilon.py.  
+Dependencies: joint_inference.py imports MH.py and sample_categories.py. MH.py imports pdf_theta.py, pdf_delta_epsilon.py, and propose_and_accept.py. sample_categories.py imports likelihoods.py. pdf_theta.py has no dependencies on other scripts. pdf_delta_epsilon imports likelihoods.py. propose_and_accept imports pdf_theta.py and pdf_delta_epsilon.py.  
 
 
 -----------------------------------------------------------------
