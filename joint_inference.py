@@ -16,8 +16,9 @@
 	#and verb_categories, an nxv matrix of model values for each of v verbs, for each of n iterations
 
 import random
+from MH import *
 from sample_categories import sample_categories
-from MH import MH
+
 
 def joint_inference(data, iterations):
 
@@ -39,14 +40,14 @@ def joint_inference(data, iterations):
 		#Run Metropolis-Hastings simulation 10 times to infer new epsilon
 		#from current delta and category values
 		#MH sampling on epsilon, so boolean value is False
-		timelogepsilon = MH(data, verb_categories[i], delta[i], epsilon[i], gammas, 10, 1)
+		timelogepsilon = MH(data, verb_categories[i], delta[i], epsilon[i], gammas, 10, Var.EPSILON)
 		newepsilon = timelogepsilon[9]
 		epsilon.append(newepsilon)
 
 		#Run Metropolis-Hastings simulation 10 times to infer new delta
 		#from new epsilon and category values
 		#MH sampling on delta, so boolean value is True
-		timelogdelta = MH(data, verb_categories[i], delta[i], newepsilon, gammas, 10, 0)
+		timelogdelta = MH(data, verb_categories[i], delta[i], newepsilon, gammas, 10, Var.DELTA)
 		newdelta = timelogdelta[9]
 		delta.append(newdelta)
 
@@ -109,7 +110,7 @@ def plot_joint_inference(data):
 #first list element for each verb in the vector is counts of overt direct objects,
 #and second list element is total count for that verb.
 #see 'CHILDESTreebank_VerbData' for all 50 verbs in order.
-data = [[308,1568], [777,1318], [11,859], [541,605], [3,605], [155,583], [406,579], [347,550], [350,509], [350,485], [287,477], [13,451], [57,383], [193,375], [221,366], [299,358], [297,356], [274,352], [265,342], [305,337], [299,331], [268,331], [275,312], [4,308], [161,306], [215,299], [21,294], [114,281], [8,275], [198,263], [11,256], [132,255], [11,253], [112,238], [13,228], [49,227], [205,220], [187,214], [8,197], [161,195], [57,192], [140,191], [141,185], [160,185], [153,183], [7,180], [149,169], [141,166], [115,160], [53,151]]
+ data = [[308,1568], [777,1318], [11,859], [541,605], [3,605], [155,583], [406,579], [347,550], [350,509], [350,485], [287,477], [13,451], [57,383], [193,375], [221,366], [299,358], [297,356], [274,352], [265,342], [305,337], [299,331], [268,331], [275,312], [4,308], [161,306], [215,299], [21,294], [114,281], [8,275], [198,263], [11,256], [132,255], [11,253], [112,238], [13,228], [49,227], [205,220], [187,214], [8,197], [161,195], [57,192], [140,191], [141,185], [160,185], [153,183], [7,180], [149,169], [141,166], [115,160], [53,151]]
 
 #We can test joint_inference with a smaller toy data set.
 #We comment out the data vector, then let

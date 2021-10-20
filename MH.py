@@ -13,6 +13,8 @@
 #Epsilon: a value from 0 to 1
 #Iterations: number of iterations for Metropolis-Hastings simulation, must
 #   be an integer value
+#Flag: tells which variable we're sampling for. Flag is a class of enums,
+	# either Var.DELTA, Var.EPSILON, or Var.THETA
 #Conducts Metropolis-Hastings simulation over specified number of
 #   iterations: initializes a random value of delta/epsilon/theta, samples
 #   from a Gaussian proposal distribution to propose a new value of
@@ -24,12 +26,14 @@
 import random
 from pdf_delta_epsilon import pdf
 from pdf_theta import pdf_theta_one_verb
-from propose_and_accept import propose_and_accept
+from propose_and_accept import *
+
+
 
 def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 	#flag determines whether we are sampling delta, epsilon, or theta. delta == 0, epsilon == 1, theta == 2
 
-	if flag < 2:
+	if ((flag == Var.DELTA) or (flag == Var.EPSILON)):
 		#Initialize a random value of epsilon/delta if sampling for one of those
 		MHvar = random.random()
 		sampled_results = [MHvar]
@@ -42,10 +46,10 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 
 		#Determine whether the variable being sampled with MH sampling is delta, epsilon, or theta
 		#Use pdf to calculate logs of height of relevant variable on curve proportional to pdf over epsilon
-	if flag == 0:
+	if flag == Var.DELTA:
 		p_MHvar = pdf(data, verb_categories, MHvar, epsilon, gammas)
 		#print("p_MHvar=  ", p_MHvar)
-	elif flag == 1:
+	elif flag == Var.EPSILON:
 		p_MHvar = pdf(data, verb_categories, delta, MHvar, gammas)
 		#print("p_MHvar=  ", p_MHvar)
 	else:
@@ -57,7 +61,7 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 		#print("-------------\niteration", i)
 		#note that this loop will actually run (iterations-1) times. This is because we want to consider
 		#the initial random samples the 'first' iteration rather than the first time this loop runs.
-		if flag < 2:
+		if ((flag == Var.DELTA) or (flag == Var.EPSILON)):
 			#if we are using MH sampling for epsilon or delta, just call propose_and_accept one time per iteration
 			result = propose_and_accept(data, verb_categories, delta, epsilon, gammas, MHvar, p_MHvar, flag)
 			MHvar = result[0] #since propose_and_accept returns a tuple, set first element in tuple as MHvar
