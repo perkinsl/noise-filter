@@ -7,6 +7,7 @@
 #Epsilon: a value from 0 to 1
 #Gammas: dictionary of combination terms from binomial distribution equations,
 #    passed on to each iteration of Gibbs sampling in joint_inference.py
+#T1dict, T2dict, T3dict: dictionaries of p(k1|n1, T) for each verb over three verb categories
 #Calculates the likelihoods of a verb over three verb categories:
 #   1: verb is fully transitive (theta = 1)
 #   2: verb is fully intransitive (theta = 0)
@@ -18,12 +19,12 @@ import numpy as np
 import itertools
 from operator import add
 
-def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
+def likelihoods(verb, delta, epsilon, gammas, T1dict, T2dict, T3dict):
 
     k = verb[0]
     n = verb[1]
 
-    Mlikelihood = []
+    Tlikelihood = []
 
     ## likelihood p(k|T, epsilon, delta)
     ## create tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
@@ -48,85 +49,83 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
     
     ## implementing Equation (10) in Perkins, Feldman & Lidz: p(k1|n1, T), in log space, for each verb category
     ## T1k1 is result for transitives (T=1)
-    def calculate_M1k1(n1, k1):
-        if (n1, k1) in M1dict:
-            M1k1term = M1dict[(n1, k1)]
+    def calculate_T1k1(n1, k1):
+        if (n1, k1) in T1dict:
+            T1k1term = T1dict[(n1, k1)]
 
         else:
             if k1 <= n1:
                 if k1 == n1:
-                    M1k1term = 0 ## log of 1: transitive category has pr. 1 if k1 = n1
+                    T1k1term = 0 ## log of 1: transitive category has pr. 1 if k1 = n1
                 else:
-                    M1k1term = float('-inf') ## log of zero: transitive category has pr. 0 for all other k1, n1 combinations
+                    T1k1term = float('-inf') ## log of zero: transitive category has pr. 0 for all other k1, n1 combinations
             else:
-                M1k1term = float('-inf')
-            M1dict[(n1, k1)] = M1k1term
+                T1k1term = float('-inf')
+            T1dict[(n1, k1)] = T1k1term
 
-        return M1k1term
+        return T1k1term
     
     ## T2k1 is result for intransitives (T=2)
-    def calculate_M2k1(n1, k1):
-        if (n1, k1) in M2dict:
-            M2k1term = M2dict[(n1, k1)]
+    def calculate_T2k1(n1, k1):
+        if (n1, k1) in T2dict:
+           T2k1term = T2dict[(n1, k1)]
 
         else:
             if k1 <= n1:
                 if k1 == 0:
-                    M2k1term = 0 ## log of 1: intransitive category has pr. 1 if k1 = 0
+                    T2k1term = 0 ## log of 1: intransitive category has pr. 1 if k1 = 0
                 else:
-                    M2k1term = float('-inf') ## log of zero: intransitive category has pr. 0 for all other k1, n1 combinations
+                    T2k1term = float('-inf') ## log of zero: intransitive category has pr. 0 for all other k1, n1 combinations
 
             else:
-                M2k1term = float('-inf')
+                T2k1term = float('-inf')
 
-            M2dict[(n1, k1)] = M2k1term
+            T2dict[(n1, k1)] = T2k1term
 
-        return M2k1term
+        return T2k1term
     
     ## T3k1 is result for alternators (T=3)
-    def calculate_M3k1(n1, k1):
-        if (n1, k1) in M3dict:
-            M3k1term = M3dict[(n1, k1)]
+    def calculate_T3k1(n1, k1):
+        if (n1, k1) in T3dict:
+            T3k1term = T3dict[(n1, k1)]
 
         else:
             if k1 <= n1:
-                M3k1term = np.log(1.0)-np.log(n1+1) ## result of integrating over all values of theta: 1/(n1+1)
+                T3k1term = np.log(1.0)-np.log(n1+1) ## result of integrating over all values of theta: 1/(n1+1)
             else:
-                M3k1term = float('-inf')
+                T3k1term = float('-inf')
 
-            M3dict[(n1, k1)] = M3k1term
+            T3dict[(n1, k1)] = T3k1term
 
-        return M3k1term
+        return T3k1term
     
     #list of functions
-    calculate_Mk1 = [calculate_M1k1, calculate_M2k1, calculate_M3k1]
+    calculate_Tk1 = [calculate_T1k1, calculate_T2k1, calculate_T3k1]
 
-    #did not define this function outside of function likelihoods because functions calculate_M1k1, calculate_M2k1, calculate_M3k1
-    #are defined within function likelihoods and our function need to call those
-    def calculate_M_likelihood(transitivity):
+    def calculate_T_likelihood(transitivity):
 
-        Mcomponent = []
+        Tcomponent = []
         
         ## group k1s by n1 values in order to efficiently compute inner sums in Equation (8)
         for key, group in itertools.groupby(combinations, lambda x: x[0]):
             ngroup = list(group)
             k0term = list(itertools.starmap(calculate_k0, ngroup))
             #choose which calculate_Mk1 function to call based on the transitivity category
-            Mk1term = list(itertools.starmap(calculate_Mk1[transitivity], ngroup))
+            Tk1term = list(itertools.starmap(calculate_Tk1[transitivity], ngroup))
 
-            Mterm = list(map(add, Mk1term, k0term))
+            Tterm = list(map(add, Tk1term, k0term))
 
-            Mterm.sort(reverse=True)
+            Tterm.sort(reverse=True)
 
-            if Mterm[0] == float('-inf'):
-                Mtermsub = Mterm
+            if Tterm[0] == float('-inf'):
+                Ttermsub = Tterm
 
             else:
-                Mtermsub = [(i-Mterm[0]) for i in Mterm]
+                Ttermsub = [(i-Tterm[0]) for i in Tterm]
 
-            Mtermexp = [math.exp(i) for i in Mtermsub]
+            Ttermexp = [math.exp(i) for i in Ttermsub]
 
-            Mlogsum = Mterm[0] + np.log1p(sum(Mtermexp[1:]))
+            Tlogsum = Tterm[0] + np.log1p(sum(Ttermexp[1:]))
 
             if (key, n) in gammas:
                 noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
@@ -135,22 +134,22 @@ def likelihoods(verb, delta, epsilon, gammas, M1dict, M2dict, M3dict):
                 gammas[(key, n)] = math.lgamma(n+1)-(math.lgamma(key+1)+math.lgamma(n-key+1))
                 noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
 
-            Mcomponent.append(Mlogsum + noise)
+            Tcomponent.append(Tlogsum + noise)
 
-        Mcomponent.sort(reverse=True)
+        Tcomponent.sort(reverse=True)
 
-        if Mcomponent[0] == float('-inf'):
-            Mcomponentsub = Mcomponent
+        if Tcomponent[0] == float('-inf'):
+            Tcomponentsub = Tcomponent
 
         else:
-            Mcomponentsub = [(i-Mcomponent[0]) for i in Mcomponent]
+            Tcomponentsub = [(i-Tcomponent[0]) for i in Tcomponent]
 
-        Mcomponentexp = [math.exp(i) for i in Mcomponentsub]
-        #instead of updating the value of M1likelihood, M2likelihood, M3likelihood, we return the calculated likekihood value
-        return Mcomponent[0] + np.log1p(sum(Mcomponentexp[1:]))
+        Tcomponentexp = [math.exp(i) for i in Tcomponentsub]
+        #instead of updating the value of T1likelihood, T2likelihood, T3likelihood, we return the calculated likekihood value
+        return Tcomponent[0] + np.log1p(sum(Tcomponentexp[1:]))
 
     #calculate likelihood over three categories
-    Mlikelihood = [calculate_M_likelihood(transitivity) for transitivity in range(3)]
+    Tlikelihood = [calculate_T_likelihood(transitivity) for transitivity in range(3)]
 
-    return Mlikelihood
+    return Tlikelihood
 
