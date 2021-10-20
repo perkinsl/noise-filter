@@ -56,8 +56,6 @@ def pdf(data, verb_categories, delta, epsilon, gammas):
         ## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
         verbposteriors = [likelihood_given_T(verb, data, verb_categories, delta, epsilon, gammas, T1dict, T2dict, T3dict) for verb in range(len(verb_categories))]
 
-        #for i in range(len(verbLikelihood)):
-            #verbposteriors.append(verbLikelihood[i])
 ## function f(x) (where X is epsilon or delta) is equal to product across all verbs of likelihood term, times prior on X
 ## prior is equal to 1 for all values of X, because epsilon and delta are both drawn from a Beta(1,1),
 ## so this reduces to product across all verbs of likelihood term only
