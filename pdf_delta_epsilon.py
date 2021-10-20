@@ -13,6 +13,7 @@
 #Epsilon: a decimal from 0 to 1
 #Delta: a decimal from 0 to 1
 #Gammas: Memoization dictionary for likelihoods initialized in joint_inference.py
+#T1dict, T2dict, T3dict: dictionaries of p(k1|n1, T) for each verb over three verb categories
 #Returns p, height of function proportional to pdf of posterior probability
 #   on epsilon/delta, at specified value of epsilon/delta
 
