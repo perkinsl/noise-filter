@@ -11,6 +11,8 @@
 #   array
 #Delta: a value from 0 to 1
 #Epsilon: a value from 0 to 1
+#Gammas: dictionary of combination terms from binomial distribution equations,
+#    passed on to each iteration of Gibbs sampling in joint_inference.py
 #Iterations: number of iterations for Metropolis-Hastings simulation, must
 #   be an integer value
 #Flag: tells which variable we're sampling for. Flag is a class of enums,
