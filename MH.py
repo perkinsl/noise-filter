@@ -40,12 +40,11 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 	else:
 		#initialize a random value of theta for each verb if sampling for theta
 		thetas = [random.random() for i in range(0, len(data))]
-		#print("THETAS INITIALLY=", thetas)
 		sampled_results = [thetas]
 
 
 		#Determine whether the variable being sampled with MH sampling is delta, epsilon, or theta
-		#Use pdf to calculate logs of height of relevant variable on curve proportional to pdf over epsilon
+		#Use pdf to calculate logs of height of relevant variable on curve proportional to pdf over the sampled variable
 	if flag == Var.DELTA:
 		p_MHvar = pdf(data, verb_categories, MHvar, epsilon, gammas)
 		#print("p_MHvar=  ", p_MHvar)
