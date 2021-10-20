@@ -58,8 +58,8 @@ def pdf(data, verb_categories, delta, epsilon, gammas):
 
         #for i in range(len(verbLikelihood)):
             #verbposteriors.append(verbLikelihood[i])
-## function f(x) (where x is epsilon or delta) is equal to product across all verbs of likelihood term, times prior on x
-## prior is equal to 1 for all values of x, because epsilon and delta are both drawn from a Beta(1,1),
+## function f(x) (where X is epsilon or delta) is equal to product across all verbs of likelihood term, times prior on X
+## prior is equal to 1 for all values of X, because epsilon and delta are both drawn from a Beta(1,1),
 ## so this reduces to product across all verbs of likelihood term only
 ## and here, we're returning that value in log space
         p = sum(verbposteriors)
