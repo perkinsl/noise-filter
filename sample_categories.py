@@ -5,10 +5,14 @@
 #   contains counts of direct objects and the second contains total number of observations
 #Gammas: dictionary of combination terms from binomial distribution equations,
 #    passed on to each iteration of Gibbs sampling in joint_inference.py
+#transitivity: integers representing verb categories, including transitive (0), intransitive (1), and alternating (2)
+#verbLikelihoods: likelihoods of each verb over three categories
+#verbNumber: index of each verb
+#T1dict, T2dict, T3dict: dictionaries of p(k1|n1, T) for each verb over three verb categories
 #Infers posterior probabilities on categories (aka, verb transitivity classes) for each verb in data:
-#    M1: verb is fully transitive (theta = 1)
-#    M2: verb is fully intransitive (theta = 0)
-#    M3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
+#    T1: verb is fully transitive (theta = 1)
+#    T2: verb is fully intransitive (theta = 0)
+#    T3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
 #Samples a category value for each verb by flipping a biased coin weighted by
 #   those posterior probabilities over categories
 #Returns a vector of category values (1, 2, or 3) for each verb in the data
@@ -24,15 +28,15 @@ from likelihoods import likelihoods
 # calculating denominator for Equation (7)
 def proportionate_category_posterior(transitivity, verbLikelihoods):
     # prior P(T) from Equation (7) is flat: 1/3 for each value of T
-    Mprior = 1.0/3.0
-    numeratorM = verbLikelihoods[transitivity] + np.log(Mprior)
-    return numeratorM
+    Tprior = 1.0/3.0
+    numeratorT = verbLikelihoods[transitivity] + np.log(Tprior)
+    return numeratorT
 
-def calculate_category(verbNumber, data, epsilon, delta, gammas, M1dict, M2dict, M3dict):
+def calculate_category(verbNumber, data, epsilon, delta, gammas, T1dict, T2dict, T3dict):
 
     verbcount = data[verbNumber]
 
-    verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
+    verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, T1dict, T2dict, T3dict)
 
     #keeping this intermediate step here because it's needed when calculating categories_posterior
     numerators = [proportionate_category_posterior(i, verbLikelihoods) for i in range(3)]
@@ -41,7 +45,7 @@ def calculate_category(verbNumber, data, epsilon, delta, gammas, M1dict, M2dict,
     denominator = np.log(sum(numeratorsexp))
 
     # final result of Equation (7), in log space
-    #no need to calculate M3 since the prediction will automatically fall into M3 if it doesn't fit into M1 and M2
+    #no need to calculate T3 since the prediction will automatically fall into T3 if it doesn't fit into T1 and T2
     categories_posterior = [(numerators[i] - denominator) for i in range(2)]
 
     #flips a biased coin weighted by posteriors on categories to sample a category for each verb
@@ -60,14 +64,12 @@ def sample_categories(data, epsilon, delta, gammas):
 
 	## memoizing specific n1, k1 combinations for Equation (10) in Perkins, Feldman & Lidz
 	## because these will always produce the same result, regardless of the verb identity
-	M1dict = {}
-	M2dict = {}
-	M3dict = {}
+	T1dict = {}
+	T2dict = {}
+	T3dict = {}
 
 	## loop through every verb in dataset and calculate posterior on transitivity categories (T)
 	## following Equation (7) in Perkins, Feldman, & Lidz
-	verb_categories = [calculate_category(verb, data, epsilon, delta, gammas, M1dict, M2dict, M3dict) for verb in range(len(data))]
-
-	#print(verb_categories)    
+	verb_categories = [calculate_category(verb, data, epsilon, delta, gammas, T1dict, T2dict, T3dict) for verb in range(len(data))]    
 
 	return verb_categories
