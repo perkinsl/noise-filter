@@ -19,12 +19,12 @@
 
 from likelihoods import likelihoods
 
-def likelihood_given_M(verbNumber, data, verb_categories, delta, epsilon, gammas, M1dict, M2dict, M3dict):
+def likelihood_given_T(verbNumber, data, verb_categories, delta, epsilon, gammas, T1dict, T2dict, T3dict):
 
     #verbNumber: index of each verb
     verbcount = data[verbNumber]
     #given a verb, calculates the likelihoods over three categories
-    verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
+    verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, T1dict, T2dict, T3dict)
 
     if verb_categories[verbNumber] == 1:
         #verbposteriors.append(verbLikelihoods[0])
@@ -51,13 +51,13 @@ def pdf(data, verb_categories, delta, epsilon, gammas):
     else:
         verbposteriors = []
 
-        M1dict = {}
-        M2dict = {}
-        M3dict = {}
+        T1dict = {}
+        T2dict = {}
+        T3dict = {}
 
         ## loop through every verb in dataset and calculate p(k|T,epsilon,delta)
         ## following likelihood function in Equation (8) in Perkins, Feldman & Lidz
-        verbposteriors = [likelihood_given_M(verb, data, verb_categories, delta, epsilon, gammas, M1dict, M2dict, M3dict) for verb in range(len(verb_categories))]
+        verbposteriors = [likelihood_given_T(verb, data, verb_categories, delta, epsilon, gammas, T1dict, T2dict, T3dict) for verb in range(len(verb_categories))]
 
         #for i in range(len(verbLikelihood)):
             #verbposteriors.append(verbLikelihood[i])
