@@ -25,9 +25,9 @@ from operator import add
 
 def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 	if theta <= 0:
-		M3likelihood = float('-inf')
+		T3likelihood = float('-inf')
 	elif theta >= 1:
-		M3likelihood = float('-inf')
+		T3likelihood = float('-inf')
 
 	else:
 
@@ -38,7 +38,7 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 
 
 
-		M3component = []
+		T3component = []
 
 		## create (n1, k1) tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
 		## equivalent to "for n1 in range (0, n+1) for k1 in range (0, k+1)"
@@ -61,7 +61,7 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 			return k2term
 
 		#implementing the calculation for p(k1 | n1, theta) (Binomial(n, theta)), in log space
-		def calculate_M3k1(n1, k1):
+		def calculate_T3k1(n1, k1):
 			if k1 <= n1:
 				if ((k1), (n1)) in gammas:
 					M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta) + ((n1)-(k1))*np.log(1-theta)
@@ -69,33 +69,33 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 					gammas[((k1), (n1))] = math.lgamma(n1+1)-(math.lgamma(k1+1)+math.lgamma((n1)-(k1)+1))
 					M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta))
 			else:
-				M3k1term = float('-inf')
+				T3k1term = float('-inf')
 
-			return M3k1term
+			return T3k1term
 
 		## group k1s by n1 values in order to efficiently compute inner sums in Equation (8)
 		for key, group in itertools.groupby(combinations, lambda x: x[0]):
 			ngroup = list(group)
 			k2term = list(itertools.starmap(calculate_k2, ngroup))
-			M3k1term = list(itertools.starmap(calculate_M3k1, ngroup))
+			T3k1term = list(itertools.starmap(calculate_T3k1, ngroup))
 
-			M3term = list(map(add, M3k1term, k2term))
-
-
-			M3term.sort(reverse=True)
+			T3term = list(map(add, T3k1term, k2term))
 
 
+			T3term.sort(reverse=True)
 
-			if M3term[0] == float('-inf'):
-				M3termsub = M3term
+
+
+			if T3term[0] == float('-inf'):
+				T3termsub = T3term
 
 			else:
-				M3termsub = [(i-M3term[0]) for i in M3term]
+				T3termsub = [(i-T3term[0]) for i in T3term]
 
 
-			M3termexp = [math.exp(i) for i in M3termsub]
+			T3termexp = [math.exp(i) for i in T3termsub]
 
-			M3logsum = M3term[0] + np.log1p(sum(M3termexp[1:]))
+			T3logsum = T3term[0] + np.log1p(sum(T3termexp[1:]))
 			#Binomial(n, 1-epsilon)
 			if (key, n) in gammas:
 				noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
@@ -105,21 +105,21 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 				noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
 
 
-			M3component.append(M3logsum + noise)
+			T3component.append(T3logsum + noise)
 
-		M3component.sort(reverse=True)
+		T3component.sort(reverse=True)
 
 
-		if M3component[0] == float('-inf'):
-			M3componentsub = M3component
+		if T3component[0] == float('-inf'):
+			T3componentsub = T3component
 
 		else:
-			M3componentsub = [(i-M3component[0]) for i in M3component]
+			T3componentsub = [(i-T3component[0]) for i in T3component]
 
-		M3componentexp = [math.exp(i) for i in M3componentsub]
+		T3componentexp = [math.exp(i) for i in T3componentsub]
 
-		M3likelihood = M3component[0] + np.log1p(sum(M3componentexp[1:]))
-	return M3likelihood
+		T3likelihood = T3component[0] + np.log1p(sum(T3componentexp[1:]))
+	return T3likelihood
 
 #data = [[19, 20], [9, 10] ,[1, 20], [2, 40], [10, 20], [3, 10]]
 data = [[19, 20], [10, 10], [1, 20], [1, 40], [10, 20], [4, 10]]
