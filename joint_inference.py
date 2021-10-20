@@ -27,6 +27,7 @@ def joint_inference(data, iterations):
 	delta = [random.random()]
 	verb_categories = []
 	gammas = {}
+	#gammas is a dictionary to memoize all the combination terms in the likelihoods
 
 	for i in range(0, iterations):
 
