@@ -1,5 +1,5 @@
 #Simulates a learner encountering a corpus of observations of many verbs (data)
-#With known models for verbs that generated that data:
+#With known categories for verbs that generated that data:
 #   1: verb is fully transitive (theta = 1)
 #   2: verb is fully intransitive (theta = 0)
 #   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
