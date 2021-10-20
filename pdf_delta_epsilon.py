@@ -21,6 +21,7 @@ from likelihoods import likelihoods
 
 def likelihood_given_M(verbNumber, data, verb_categories, delta, epsilon, gammas, M1dict, M2dict, M3dict):
 
+    #verbNumber: index of each verb
     verbcount = data[verbNumber]
     #given a verb, calculates the likelihoods over three categories
     verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, M1dict, M2dict, M3dict)
