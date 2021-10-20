@@ -21,7 +21,7 @@
 #   delta/epsilon/theta, and accepts that proposal depending on the posterior
 #   probabilities of delta/epsilon/theta and the proposed new delta/epsilon/theta given in the
 #   pdf_delta_epsilon/pdf_theta function
-#   When sampling for theta, at each iteration MH will sample a theta list  (a list of theta values) for each verb, so at the end it will return a list of theta lists. 
+#   When sampling for theta, at each iteration MH will sample a theta list (a list of theta values for each verb), so at the end it will return a list of theta lists. 
 #Returns vector of delta/epsilon/theta values after running specified number of iterations
 
 import random
