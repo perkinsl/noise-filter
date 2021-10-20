@@ -1,4 +1,4 @@
-#Simulates a learner encountering a corpus of observations of many verbs (data)
+#Xalculates p(k|T,epsilon,delta), which is the likelihood of a given verb over three transitivity categories.
 #With known epsilon and delta (a value between 0 and 1)
 #verb: a 2-element list corresponding to counts of observations for each of n verbs. 
 #   In each sublist, the first element contains counts of direct objects 
