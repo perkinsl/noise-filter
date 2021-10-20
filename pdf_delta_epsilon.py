@@ -1,4 +1,4 @@
-#Calculates f(x) for specific value x of epsilon or delta, where f is a function returning a value proportional to the posterior probability 
+#Calculates f(x) for specific value x of either epsilon or delta, where f is a function returning a value proportional to the posterior probability 
 #   on epsilon or delta. Calls likelihoods.py to do most of the calculations.
 #With known categories for verbs that generated that data:
 #   1: verb is fully transitive (theta = 1)
