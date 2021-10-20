@@ -23,7 +23,13 @@
 import math
 import random
 from pdf_delta_epsilon import pdf
+from enum import Enum
 from pdf_theta import pdf_theta_one_verb
+
+class Var(Enum):
+	DELTA = 1
+	EPSILON = 2
+	THETA = 3
 
 ## Acceptance function that takes a current variable, a new proposed variable
 ## and the probabilities of each in the function proportional to the posterior pdf
@@ -67,15 +73,15 @@ def propose_and_accept(data, verb_categories, delta, epsilon, gammas, var, p_var
 
 
 	#Call the corresponding pdf function according to the variable flag
-	if flag == 0:
+	if flag == Var.DELTA:
 		#Use pdf to calculate logs of height of var_prime on curve proportional to pdf over var
 		p_var_prime = pdf(data, verb_categories, var_prime, epsilon, gammas)
 
-	elif flag == 1:
+	elif flag == Var.EPSILON:
 		p_var_prime = pdf(data, verb_categories, delta, var_prime, gammas)
 
 	else:
-		#Here we take in one verb for the data variable 
+		#Here we take in one verb for the data variable
 		p_var_prime = pdf_theta_one_verb(data, delta, epsilon, var_prime, gammas)
 	#returns both var and p_var to be updated outside this function
 	return accept(var, var_prime, p_var, p_var_prime)

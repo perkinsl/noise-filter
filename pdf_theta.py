@@ -32,7 +32,7 @@ def pdf_theta_one_verb(verb, delta, epsilon, theta, gammas):
 	else:
 
 		verbcount = verb
-		
+
 		k = verbcount[0]
 		n = verbcount[1]
 

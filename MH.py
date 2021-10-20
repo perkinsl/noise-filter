@@ -22,15 +22,11 @@
 #Returns vector of delta/epsilon/theta values after running specified number of iterations
 
 import random
-from enum import Enum
 from pdf_delta_epsilon import pdf
 from pdf_theta import pdf_theta_one_verb
-from propose_and_accept import propose_and_accept
+from propose_and_accept import *
 
-class Var(Enum):
-	DELTA = 1
-	EPSILON = 2
-	THETA = 3
+
 
 def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 	#flag determines whether we are sampling delta, epsilon, or theta. delta == 0, epsilon == 1, theta == 2
