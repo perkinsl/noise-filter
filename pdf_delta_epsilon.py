@@ -27,19 +27,16 @@ def likelihood_given_T(verbNumber, data, verb_categories, delta, epsilon, gammas
     verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, T1dict, T2dict, T3dict)
 
     if verb_categories[verbNumber] == 1:
-        #verbposteriors.append(verbLikelihoods[0])
         return verbLikelihoods[0]
 
     elif verb_categories[verbNumber] == 2:
-        #verbposteriors.append(verbLikelihoods[1])
         return verbLikelihoods[1]
 
     elif verb_categories[verbNumber] == 3:
-        #verbposteriors.append(verbLikelihoods[2])
         return verbLikelihoods[2]
 
     else:
-        print('Invalid model value')
+        print('Invalid verb category value')
         return float('-inf')
 
 def pdf(data, verb_categories, delta, epsilon, gammas):
