@@ -1,5 +1,5 @@
 #Simulates a learner encountering a corpus of observations of many verbs (data)
-#Infers model values (aka, verb transitivity classes) for each verb in data:
+#Infers category values (aka, verb transitivity classes) for each verb in data:
     #1: verb is fully transitive (theta = 1)
     #2: verb is fully intransitive (theta = 0)
     #3: verb is mixed (theta sampled from Beta(1,1) uniform distribution
