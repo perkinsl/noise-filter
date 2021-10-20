@@ -1,5 +1,6 @@
-#Simulates a learner encountering a corpus of observations of many verbs (data)
-#With known models for verbs that generated that data:
+#Calculates f(x) for specific value x of epsilon or delta, where f is a function returning a value proportional to the posterior probability 
+#   on epsilon or delta. Calls likelihoods.py to do most of the calculations.
+#With known categories for verbs that generated that data:
 #   1: verb is fully transitive (theta = 1)
 #   2: verb is fully intransitive (theta = 0)
 #   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
@@ -11,6 +12,7 @@
 #   array
 #Epsilon: a decimal from 0 to 1
 #Delta: a decimal from 0 to 1
+#Gammas: Memoization dictionary for likelihoods initialized in joint_inference.py
 #Returns p, height of function proportional to pdf of posterior probability
 #   on epsilon/delta, at specified value of epsilon/delta
 
