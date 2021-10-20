@@ -13,6 +13,8 @@
 #Epsilon: a value from 0 to 1
 #Iterations: number of iterations for Metropolis-Hastings simulation, must
 #   be an integer value
+#Flag: tells which variable we're sampling for. Flag is a class of enums,
+	# either Var.DELTA, Var.EPSILON, or Var.THETA
 #Conducts Metropolis-Hastings simulation over specified number of
 #   iterations: initializes a random value of delta/epsilon/theta, samples
 #   from a Gaussian proposal distribution to propose a new value of

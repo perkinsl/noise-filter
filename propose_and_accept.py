@@ -13,6 +13,8 @@
 #Epsilon: a value from 0 to 1
 #Gammas: dictionary of combination terms from binomial distribution equations,
 #    passed on to each iteration of Gibbs sampling in joint_inference.py
+#Flag: tells which variable we're sampling for. Flag is a class of enums,
+#   either Var.DELTA, Var.EPSILON, or Var.THETA
 #samples from a Gaussian proposal distribution to propose a new value of
 #   delta/epsilon/theta, and accepts that proposal depending on the posterior
 #   probabilities of delta/epsilon/theta and the proposed new delta/epsilon/theta given in the
@@ -26,6 +28,7 @@ from pdf_delta_epsilon import pdf
 from enum import Enum
 from pdf_theta import pdf_theta_one_verb
 
+#
 class Var(Enum):
 	DELTA = 1
 	EPSILON = 2
