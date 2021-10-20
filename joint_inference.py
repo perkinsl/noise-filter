@@ -7,7 +7,7 @@
     #data, a decimal between 0 and 1
 #At each iteration, runs 10 steps of the Metropolis-Hastings simulation in
     #MH, and uses the 10th values generated to sample category
-    #values using sample_categories.m
+    #values using sample_categories
 #Data: a list of length n where each item is a 2-element list corresponding
 #   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
