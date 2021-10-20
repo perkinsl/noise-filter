@@ -47,7 +47,7 @@ def joint_inference(data, iterations):
 
 		#Run Metropolis-Hastings simulation 10 times to infer new delta
 		#from new epsilon and category values
-		#MH sampling on delta, so boolean value is True
+		#MH sampling on delta
 		timelogdelta = MH(data, verb_categories[i], delta[i], newepsilon, gammas, 10, Var.DELTA)
 		newdelta = timelogdelta[9]
 		delta.append(newdelta)
