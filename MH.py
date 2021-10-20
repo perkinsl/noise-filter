@@ -32,7 +32,6 @@ from propose_and_accept import *
 
 
 def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
-	#flag determines whether we are sampling delta, epsilon, or theta. delta == 0, epsilon == 1, theta == 2
 
 	if ((flag == Var.DELTA) or (flag == Var.EPSILON)):
 		#Initialize a random value of epsilon/delta if sampling for one of those
