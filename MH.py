@@ -57,7 +57,6 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 
 
 	for i in range(1, iterations):
-		#print("-------------\niteration", i)
 		#note that this loop will actually run (iterations-1) times. This is because we want to consider
 		#the initial random samples the 'first' iteration rather than the first time this loop runs.
 		if ((flag == Var.DELTA) or (flag == Var.EPSILON)):
@@ -67,21 +66,12 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 			p_MHvar = result[1] #set second element in tuple as p_MHvar
 			#add the result to the sampled_results list
 			sampled_results.append(MHvar)
-			# print("MHvar = ", MHvar)
-			# print("p_MHvar =", p_MHvar)
 		#this function returns a new MHvar
 		else:
 			#for theta, call propose_and_accept on each theta value (ie, for each verb)
 			result = [propose_and_accept(data[j], verb_categories, delta, epsilon, gammas, thetas[j], p_thetas[j], flag) for j in range(0, len(thetas))]
 			thetas = [i[0] for i in result] #propose_and_accept returns a list of tuples, set first element of each tuple as thetas list
-			#print("thetas = ", thetas )
 			p_thetas = [i[1] for i in result] #set second element of each tuple as p_thetas list
 			sampled_results.append(thetas) #add the accepted thetas to results list
 
 	return sampled_results
-#data = [[19, 20]]
-#epsilon = [random.random()]
-#delta = [random.random()]
-#verb_categories = []
-#gammas = {}
-#MH(data, verb_categories, delta[0], epsilon[0], gammas, 10, 2)
