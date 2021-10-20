@@ -55,7 +55,7 @@ def joint_inference(data, iterations):
 	return verb_categories, epsilon, delta
 
 #Run joint_inference over 1000 iterations and plot probability distribution over
-#categories and epsilon
+#categories, epsilon, and delta
 
 import numpy as np
 import matplotlib.pyplot as plt
