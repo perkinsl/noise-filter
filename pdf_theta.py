@@ -1,19 +1,19 @@
-# #Simulates a learner encountering a corpus of observations of many verbs (data)
-# #With known models for verbs that generated that data:
-# #   1: verb is fully transitive (theta = 1)
-# #   2: verb is fully intransitive (theta = 0)
-# #   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
-# This file assumes only one category, alternating verbs.
-# #Data: a list of length n where each item is a 2-element list corresponding
-# #   to counts of observations for each of n verbs. In each sublist, the first element
-# #   contains counts of direct objects and the second contains total number of observations
-# #Epsilon: a decimal from 0 to 1
-# #Returns p, height of function proportional to pdf of posterior probability
-# #   on delta, at specified value of delta
-#
-#
-# ## NOTE: a lot of this repeats code from sample_categories.py // THIS IS NO LONGER TRUE, RIGHT?
-# ## see comments in that code for details on how this corresponds to math in Perkins, Feldman, & Lidz // WE SHOULD PROBABLY COMMENT THE MATH HERE
+#calculates f(x) for specific value x of theta, where f is a function returning a value proportional to the posterior probability on theta. Note that this file works on one verb at a time, and the MH.py script with flag 2 calls it on each verb in the data structure.
+#With known models for verbs that generated that data:
+#   1: verb is fully transitive (theta = 1)
+#   2: verb is fully intransitive (theta = 0)
+#   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
+#This file assumes only one category, alternating verbs.
+#Data: a list of length n where each item is a 2-element list corresponding
+#   to counts of observations for each of n verbs. In each sublist, the first element
+#   contains counts of direct objects and the second contains total number of observations
+#Epsilon: a decimal from 0 to 1
+#Returns p, height of function proportional to pdf of posterior probability
+#   on delta, at specified value of delta
+
+
+## NOTE: a lot of this repeats code from sample_categories.py // THIS IS NO LONGER TRUE, RIGHT?
+## see comments in that code for details on how this corresponds to math in Perkins, Feldman, & Lidz // WE SHOULD PROBABLY COMMENT THE MATH HERE
 
 import math
 import numpy as np
