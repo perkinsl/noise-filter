@@ -93,7 +93,7 @@ categories [1, 1, 2, 2, 3, 3]
  [ 0  0 10]
  [ 0  1  9]]
 
-The output describes the predicted verb categories of the 6 verbs during each iteration.
+The output describes the sampled verb categories of the 6 verbs during each iteration.
 The list of 3-element lists at the end indicate the total number of occurrences of the 3 categories for each verb, which are saved to a separate txt file named category_table.
 Note that the output prints out the categories sampled in all 20 iterations but we only take the samples from the last 10 iterations in computing the final transitivity category.
 The transitivity category is determined by the category that was assigned the highest probability to each verb by our model described in Perkins, Feldman, & Lidz, so for this data set, the transitivity category for each verb by our model should be [1, 1, 2, 2, 3, 3].
