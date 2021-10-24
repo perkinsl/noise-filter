@@ -43,8 +43,7 @@ We comment out the data vector, then let
 data = [[19, 20], [9, 10], [1, 20], [2, 40], [10, 20], [3, 10]] 
 and run joint_inference.py.
 Note here we also replaced the code for running Gibbs sampling 1000 iterations and saving every tenth result in the last 500 iterations
-with the code for running Gibbs sampling 20 times and saving the results from the last 10 iterations.
-for the sake of demonstration.
+with the code for running Gibbs sampling 20 times and saving the results from the last 10 iterations for the sake of demonstration.
 The output should look something like:
 
 iteration 0
