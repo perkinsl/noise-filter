@@ -37,3 +37,67 @@ The number of iterations for Gibbs Sampling and Metropolis-Hastings sampling can
 The priors on transitivity categories (T) can be adjusted in sample_models.py.
 
 To examine the effects of randomly varying the values for epsilon and delta, call test_epsilon_delta.py. To examine the effects of randomly varying the prior over T, call test_priors.py.
+
+We can test joint_inference with a smaller toy data set.
+We comment out the data vector, then let
+data = [[19, 20], [9, 10], [1, 20], [2, 40], [10, 20], [3, 10]] 
+and run joint_inference.py.
+Note here we also replaced the code for running Gibbs sampling 1000 iterations and saving every tenth result in the last 500 iterations
+with the code for running Gibbs sampling 20 times and saving the results from the last 10 iterations.
+for the sake of demonstration.
+The output should look something like:
+
+iteration 0
+categories [1, 2, 2, 2, 2, 2]
+iteration 1
+categories [1, 1, 2, 2, 3, 2]
+iteration 2
+categories [1, 1, 2, 2, 3, 2]
+iteration 3
+categories [1, 1, 2, 2, 1, 3]
+iteration 4
+categories [1, 1, 2, 2, 3, 3]
+iteration 5
+categories [1, 3, 2, 3, 3, 3]
+iteration 6
+categories [1, 1, 2, 2, 3, 3]
+iteration 7
+categories [1, 1, 2, 2, 3, 3]
+iteration 8
+categories [1, 3, 2, 2, 3, 3]
+iteration 9
+categories [1, 1, 2, 2, 3, 3]
+iteration 10
+categories [1, 1, 2, 2, 3, 3]
+iteration 11
+categories [1, 3, 2, 2, 3, 3]
+iteration 12
+categories [1, 1, 2, 3, 3, 2]
+iteration 13
+categories [1, 3, 2, 2, 3, 3]
+iteration 14
+categories [1, 1, 2, 2, 3, 3]
+iteration 15
+categories [1, 1, 2, 2, 3, 3]
+iteration 16
+categories [1, 3, 2, 2, 3, 3]
+iteration 17
+categories [1, 1, 3, 2, 3, 3]
+iteration 18
+categories [1, 1, 2, 2, 3, 3]
+iteration 19
+categories [1, 1, 2, 2, 3, 3]
+[[10  0  0]
+ [ 7  0  3]
+ [ 0  9  1]
+ [ 0  9  1]
+ [ 0  0 10]
+ [ 0  1  9]]
+
+The output describes the predicted verb categories of the 6 verbs during each iteration.
+The last 6 lines indicate the total number of occurrences of the 3 categories for each verb, which are saved to a separate txt file named category_table.
+Note that the output prints out the categories sampled in all 20 iterations but we only take the samples from the last 10 iterations in computing the final transitivity category.
+The transitivity category is determined by the category that was assigned the highest probability to each verb by our model described in Perkins, Feldman, & Lidz, so for this data set, the transitivity category for each verb by our model should be [1, 1, 2, 2, 3, 3].
+Additionally, the output also includes two histograms of the distribution over delta and epsilon, which are saved to separate png files named delta.png and epsilon.png, respectively.
+For this dataset, the distribution over delta is centered at 0.5, and the distribution over epsilon is centered at 0.15.
+The actual delta of this data set = 0.5, and actual epsilon = 0.1, actual models = [1, 1, 2, 2, 3, 3], which match our result.
