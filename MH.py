@@ -49,13 +49,10 @@ def MH(data, verb_categories, delta, epsilon, gammas, iterations, flag):
 		#Use pdf to calculate logs of height of relevant variable on curve proportional to pdf over the sampled variable
 	if flag == Var.DELTA:
 		p_MHvar = pdf(data, verb_categories, MHvar, epsilon, gammas)
-		#print("p_MHvar=  ", p_MHvar)
 	elif flag == Var.EPSILON:
 		p_MHvar = pdf(data, verb_categories, delta, MHvar, gammas)
-		#print("p_MHvar=  ", p_MHvar)
 	else:
 		p_thetas = [pdf_theta_one_verb(data[j], delta, epsilon, thetas[j], gammas) for j in range(0, len(thetas))]
-		#print("p_thetas=  ", p_thetas)
 
 
 	for i in range(1, iterations):
