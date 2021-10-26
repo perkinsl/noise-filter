@@ -62,22 +62,13 @@ import matplotlib.pyplot as plt
 
 def plot_joint_inference(data):
 
-	#verb_categories, epsilon, delta = joint_inference(data, 1000)
+	verb_categories, epsilon, delta = joint_inference(data, 1000)
 
-	#Use every 10th value from last 500 iterations as samples
-	#categorysamples = verb_categories[501::10]
-	#epsilonsamples = epsilon[501::10]
-	#np.savetxt('epsilon', epsilonsamples)
-	#deltasamples = delta[501::10]
-	#np.savetxt('delta', deltasamples)
-    
-    #for the toy data set, we're running joint_inference for 50 iterations
-	verb_categories, epsilon, delta = joint_inference(data, 50)
-    
-	categorysamples = verb_categories[:-1]
-	epsilonsamples = epsilon[:-1]
+	Use every 10th value from last 500 iterations as samples
+	categorysamples = verb_categories[501::10]
+	epsilonsamples = epsilon[501::10]
 	np.savetxt('epsilon', epsilonsamples)
-	deltasamples = delta[:-1]
+	deltasamples = delta[501::10]
 	np.savetxt('delta', deltasamples)
 
 	#Plot histogram of epsilon samples
