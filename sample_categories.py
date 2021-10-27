@@ -8,14 +8,13 @@
 #Epsilon: a decimal from 0 to 1
 #Gammas: dictionary of combination terms from binomial distribution equations,
 #    passed on to each iteration of Gibbs sampling in joint_inference.py
-#transitivity: integers representing verb categories, including transitive (0), intransitive (1), and alternating (2)
-#verbLikelihoods: likelihoods of each verb over three categories
-#verbNumber: index of each verb
-#T1dict, T2dict, T3dict: dictionaries of p(k1|n1, T) for each verb over three verb categories
-#Infers posterior probabilities on categories (aka, verb transitivity classes) for each verb in data:
+#transitivity: integers representing verb categories, including transitive (1), intransitive (2), and alternating (3)
+#Infers posterior probabilities on categories for each verb in data:
 #    T1: verb is fully transitive (theta = 1)
 #    T2: verb is fully intransitive (theta = 0)
 #    T3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
+#verbLikelihoods: likelihoods of each verb over three categories
+#T1dict, T2dict, T3dict: dictionaries of p(k1|n1, T) for each verb over three verb categories
 #Samples a category value for each verb by flipping a biased coin weighted by
 #   those posterior probabilities over categories
 #Returns a vector of category values (1, 2, or 3) for each verb in the data
@@ -32,7 +31,7 @@ from likelihoods import likelihoods
 def proportionate_category_posterior(transitivity, verbLikelihoods):
     # prior P(T) from Equation (7) is flat: 1/3 for each value of T
     Tprior = 1.0/3.0
-    numeratorT = verbLikelihoods[transitivity] + np.log(Tprior)
+    numeratorT = verbLikelihoods[transitivity-1] + np.log(Tprior)
     return numeratorT
 
 def calculate_category(verbNumber, data, epsilon, delta, gammas, T1dict, T2dict, T3dict):
@@ -42,7 +41,7 @@ def calculate_category(verbNumber, data, epsilon, delta, gammas, T1dict, T2dict,
     verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, T1dict, T2dict, T3dict)
 
     #keeping this intermediate step here because it's needed when calculating categories_posterior
-    numerators = [proportionate_category_posterior(i, verbLikelihoods) for i in range(3)]
+    numerators = [proportionate_category_posterior(i, verbLikelihoods) for i in range(1,4)]
 
     numeratorsexp = [math.exp(i) for i in numerators] # list comprehension: [fun(i) for i in list]
     denominator = np.log(sum(numeratorsexp))
