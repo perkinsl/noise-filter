@@ -49,45 +49,39 @@ In this example, we also modified the code to run a shorter Gibbs sampling chain
 If you then run joint_inference.py, the output should look something like:
 
 iteration 0
+
 categories [1, 2, 2, 2, 2, 2]
+
 iteration 1
+
 categories [1, 1, 2, 2, 3, 2]
+
 iteration 2
+
 categories [1, 1, 2, 2, 3, 2]
+
 iteration 3
+
 categories [1, 1, 2, 2, 1, 3]
+
 iteration 4
+
 categories [1, 1, 2, 2, 3, 3]
+
 iteration 5
+
 categories [1, 3, 2, 3, 3, 3]
-iteration 6
-categories [1, 1, 2, 2, 3, 3]
-iteration 7
-categories [1, 1, 2, 2, 3, 3]
-iteration 8
-categories [1, 3, 2, 2, 3, 3]
-iteration 9
-categories [1, 1, 2, 2, 3, 3]
-iteration 10
-categories [1, 1, 2, 2, 3, 3]
-iteration 11
-categories [1, 3, 2, 2, 3, 3]
-iteration 12
-categories [1, 1, 2, 3, 3, 2]
-iteration 13
-categories [1, 3, 2, 2, 3, 3]
-iteration 14
-categories [1, 1, 2, 2, 3, 3]
-iteration 15
-categories [1, 1, 2, 2, 3, 3]
-iteration 16
-categories [1, 3, 2, 2, 3, 3]
-iteration 17
-categories [1, 1, 3, 2, 3, 3]
+
+...
+
 iteration 18
+
 categories [1, 1, 2, 2, 3, 3]
+
 iteration 19
+
 categories [1, 1, 2, 2, 3, 3]
+
 [[10  0  0]
  [ 7  0  3]
  [ 0  9  1]
@@ -95,9 +89,7 @@ categories [1, 1, 2, 2, 3, 3]
  [ 0  0 10]
  [ 0  1  9]]
 
-The output describes the sampled verb categories of the 6 verbs during each iteration.
-
-The list of 3-element lists at the end indicate the total number of occurrences of the 3 categories for each verb, which is saved to a separate .txt file named category_table. Note that the output prints out the categories sampled in all 20 iterations, but we only take the samples from the last 10 iterations in computing the final transitivity category.
+The output describes the sampled verb categories of the 6 verbs during each iteration. The list of 3-element lists at the end indicate the total number of occurrences of the 3 categories for each verb, which is saved to a separate .txt file named category_table. Note that the output prints out the categories sampled in all iterations, but to compute the posteriors over verb transitivity categories we only take the samples from a specified number of those iterations, here the last 10 iterations.
 
 To determine the transitivity category that the model assigned to each verb, Perkins, Feldman & Lidz chose the category with highest posterior probability. For this data set, the transitivity category assigned to each verb by the model would be [1, 1, 2, 2, 3, 3], representing "transitive, transitive, intransitive, intransitive, alternating, alternating."
 
