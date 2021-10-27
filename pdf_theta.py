@@ -12,7 +12,8 @@
 #Delta: a decimal from 0 to 1
 #Gammas: A dictionary to memoize all the combination terms in the likelihoods
 #Returns p, height of function proportional to pdf of posterior probability
-#   on delta, at specified value of delta
+#   on theta, at specified value of theta
+#Samples for theta on one verb only
 
 import math
 import numpy as np
@@ -37,7 +38,7 @@ def pdf_theta_one_verb(verbcount, delta, epsilon, theta, gammas):
 
 
 		T3component = []
-
+		## Following code is very similar to code in likelihoods.py. For more extensive explanations of the calculatations, see that script. 
 		## create (n1, k1) tuples containing all combinations of n1 in range (0, n+1) and k1 in range (0, k+1)
 		## equivalent to "for n1 in range (0, n+1) for k1 in range (0, k+1)"
 
@@ -62,10 +63,10 @@ def pdf_theta_one_verb(verbcount, delta, epsilon, theta, gammas):
 		def calculate_T3k1(n1, k1):
 			if k1 <= n1:
 				if ((k1), (n1)) in gammas:
-					M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta) + ((n1)-(k1))*np.log(1-theta)
+					T3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta) + ((n1)-(k1))*np.log(1-theta)
 				else:
 					gammas[((k1), (n1))] = math.lgamma(n1+1)-(math.lgamma(k1+1)+math.lgamma((n1)-(k1)+1))
-					M3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta))
+					T3k1term = gammas[((k1), (n1))] + (k1)*np.log(theta)+ (((n1)-(k1))*np.log(1-theta))
 			else:
 				T3k1term = float('-inf')
 
