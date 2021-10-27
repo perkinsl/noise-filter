@@ -4,14 +4,15 @@
 #   1: verb is fully transitive (theta = 1)
 #   2: verb is fully intransitive (theta = 0)
 #   3: verb is mixed (theta sampled from Beta(1,1) uniform distribution)
+#verbNumber: number corresponding to the verb's index in the 'data' vector
 #Data: a list of length n where each item is a 2-element list corresponding
 #   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
 #verb_categories: a list of model values (1, 2, or 3) for each verb in the data
 #   array, where each element in list corresponds to a row in the data
 #   array
-#Epsilon: a decimal from 0 to 1
 #Delta: a decimal from 0 to 1
+#Epsilon: a decimal from 0 to 1
 #Gammas: Memoization dictionary for likelihoods initialized in joint_inference.py
 #T1dict, T2dict, T3dict: dictionaries of p(k1|n1, T) for each verb over three verb categories
 #Returns p, height of function proportional to pdf of posterior probability
