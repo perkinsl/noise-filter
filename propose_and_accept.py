@@ -63,14 +63,14 @@ def propose_and_accept(data, verb_categories, delta, epsilon, gammas, var, p_var
 
 	#Call the corresponding pdf function according to the variable flag
 	if flag == Var.DELTA:
-		#Use pdf to calculate logs of height of var_prime on curve proportional to pdf over var
+		#Use pdf to calculate logs of height of var_prime on curve proportional to pdf over var_prime
 		p_var_prime = pdf(data, verb_categories, var_prime, epsilon, gammas)
 
 	elif flag == Var.EPSILON:
 		p_var_prime = pdf(data, verb_categories, delta, var_prime, gammas)
 
 	else:
-		#If sampling for theta, data will only contain the data for one verb. 
+		#If sampling for theta, data argument will only contain the data for one verb. 
 		p_var_prime = pdf_theta_one_verb(data, delta, epsilon, var_prime, gammas)
 	#returns both var and p_var to be updated outside this function
 	return accept(var, var_prime, p_var, p_var_prime)
