@@ -16,6 +16,7 @@
 #    passed on to each iteration of Gibbs sampling in joint_inference.py
 #Flag: tells which variable we're sampling for. Flag is a class of enums,
 #   either Var.DELTA, Var.EPSILON, or Var.THETA
+#Note: When sampling theta, we sample for one verb at at time. So, the 'data' argument will only contain the data for one verb and not the whole vector.
 #Returns a two-element list of the accepted value for delta/epsilon/theta and its acceptance probability
 
 
@@ -69,7 +70,7 @@ def propose_and_accept(data, verb_categories, delta, epsilon, gammas, var, p_var
 		p_var_prime = pdf(data, verb_categories, delta, var_prime, gammas)
 
 	else:
-		#Here we take in one verb for the data variable
+		#If sampling for theta, data will only contain the data for one verb. 
 		p_var_prime = pdf_theta_one_verb(data, delta, epsilon, var_prime, gammas)
 	#returns both var and p_var to be updated outside this function
 	return accept(var, var_prime, p_var, p_var_prime)
