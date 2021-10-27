@@ -108,33 +108,56 @@ def likelihoods(verb, delta, epsilon, gammas, T1dict, T2dict, T3dict):
         ## group k1s by n1 values in order to efficiently compute inner sums in Equation (8)
         for key, group in itertools.groupby(combinations, lambda x: x[0]):
             ngroup = list(group)
+            
+            ## itertools.starmap() applies given function using all elements from the tuple as arguments
+			## e.g., it applies calculate_k0 to the (n1, k1) tuples in the given list of tuples
             k0term = list(itertools.starmap(calculate_k0, ngroup))
             #choose which calculate_Tk1 function to call based on the transitivity category
             Tk1term = list(itertools.starmap(calculate_Tk1[transitivity], ngroup))
-
+            
+            ## computing inner sum for this group of k1s
+			## start by multiplying terms in Equations (9) and (10) in log space for all values of k1
             Tterm = list(map(add, Tk1term, k0term))
 
+            ## trick for computing the log of a summation without stack overflow:
+			## you can subtract the largest log value from all other values without exponentiating it
+			## log(sum of a_i from i=0 to N) = 
+			##		= log(a_0) + log(1 + (sum of (a_i)/(a_0) from i=1 to N))
+			##		= log(a_0) + log(1 + (sum of exp(log(a_i) - log(a_0)) from i=1 to N))
+			## for a_0 > a_1 > ... > a_N
+            
+            ## sort lists from large to small
             Tterm.sort(reverse=True)
-
+            
+            ## if largest log probability in list is -inf, result of subtraction for rest of list is also -inf
             if Tterm[0] == float('-inf'):
                 Ttermsub = Tterm
-
+            
+            ## otherwise, perform subtraction for rest of list
             else:
                 Ttermsub = [(i-Tterm[0]) for i in Tterm]
-
+            
+            ## exponentiate subtraction result
             Ttermexp = [math.exp(i) for i in Ttermsub]
-
+            
+			## add to 1, re-log, and add to first log probability in list
+			## np.log1p() calculates log(1 + x) for each element x of input array
             Tlogsum = Tterm[0] + np.log1p(sum(Ttermexp[1:]))
-
+            
+            ## inner sum of Equation (8) is now finished! 
+			## calculate noise term: p(n1|epsilon), following Equation (11)
+			## 'key' is the name for the current value of n1 for this group of k1s
             if (key, n) in gammas:
                 noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
 
             else:
                 gammas[(key, n)] = math.lgamma(n+1)-(math.lgamma(key+1)+math.lgamma(n-key+1))
                 noise = gammas[(key, n)]+key*math.log(1-epsilon)+(n-key)*math.log(epsilon)
-
+            
+            ## add noise term to result of inner sum
             Tcomponent.append(Tlogsum + noise)
-
+        
+        ## compute outer sum of Equation (8) using the same trick that we used for inner sum
         Tcomponent.sort(reverse=True)
 
         if Tcomponent[0] == float('-inf'):
@@ -144,10 +167,11 @@ def likelihoods(verb, delta, epsilon, gammas, T1dict, T2dict, T3dict):
             Tcomponentsub = [(i-Tcomponent[0]) for i in Tcomponent]
 
         Tcomponentexp = [math.exp(i) for i in Tcomponentsub]
-        #instead of updating the value of T1likelihood, T2likelihood, T3likelihood, we return the calculated likekihood value
+        
+        #return the calculated likekihood value for this verb category
         return Tcomponent[0] + np.log1p(sum(Tcomponentexp[1:]))
 
-    #calculate likelihood over three categories
+    #final result of Equation (8): calculate likelihood over three categories
     Tlikelihood = [calculate_T_likelihood(transitivity) for transitivity in range(3)]
 
     return Tlikelihood
