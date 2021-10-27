@@ -27,23 +27,23 @@ import random
 import numpy as np
 from likelihoods import likelihoods
 
-# calculating denominator for Equation (7)
+#Calculates numerator for Equation (7)
 def proportionate_category_posterior(transitivity, verbLikelihoods):
     # prior P(T) from Equation (7) is flat: 1/3 for each value of T
     Tprior = 1.0/3.0
     numeratorT = verbLikelihoods[transitivity-1] + np.log(Tprior)
     return numeratorT
 
+#Samples a verb category for the verb given
 def calculate_category(verbNumber, data, epsilon, delta, gammas, T1dict, T2dict, T3dict):
 
     verbcount = data[verbNumber]
 
     verbLikelihoods = likelihoods(verbcount, delta, epsilon, gammas, T1dict, T2dict, T3dict)
-
-    #keeping this intermediate step here because it's needed when calculating categories_posterior
+	
     numerators = [proportionate_category_posterior(i, verbLikelihoods) for i in range(1,4)]
 
-    numeratorsexp = [math.exp(i) for i in numerators] # list comprehension: [fun(i) for i in list]
+    numeratorsexp = [math.exp(i) for i in numerators]
     denominator = np.log(sum(numeratorsexp))
 
     # final result of Equation (7), in log space
@@ -61,6 +61,7 @@ def calculate_category(verbNumber, data, epsilon, delta, gammas, T1dict, T2dict,
     else:
         return 3
 
+#Samples verb categories for all verbs
 def sample_categories(data, epsilon, delta, gammas):
 	verb_categories = []
 
