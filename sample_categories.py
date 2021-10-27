@@ -1,8 +1,11 @@
 #Simulates a learner encountering a corpus of observations of many verbs (data)
 #With known epsilon and delta (a value between 0 and 1)
+#verbNumber: number corresponding to the verb's index in the 'data' vector
 #Data: a list of length n where each item is a 2-element list corresponding
 #   to counts of observations for each of n verbs. In each sublist, the first element
 #   contains counts of direct objects and the second contains total number of observations
+#Delta: a decimal from 0 to 1
+#Epsilon: a decimal from 0 to 1
 #Gammas: dictionary of combination terms from binomial distribution equations,
 #    passed on to each iteration of Gibbs sampling in joint_inference.py
 #transitivity: integers representing verb categories, including transitive (0), intransitive (1), and alternating (2)
