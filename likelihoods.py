@@ -99,7 +99,6 @@ def likelihoods(verb, delta, epsilon, gammas, T1dict, T2dict, T3dict):
 
         return T3k1term
     
-    #list of functions
     calculate_Tk1 = [calculate_T1k1, calculate_T2k1, calculate_T3k1]
 
     def calculate_T_likelihood(transitivity):
@@ -110,7 +109,7 @@ def likelihoods(verb, delta, epsilon, gammas, T1dict, T2dict, T3dict):
         for key, group in itertools.groupby(combinations, lambda x: x[0]):
             ngroup = list(group)
             k0term = list(itertools.starmap(calculate_k0, ngroup))
-            #choose which calculate_Mk1 function to call based on the transitivity category
+            #choose which calculate_Tk1 function to call based on the transitivity category
             Tk1term = list(itertools.starmap(calculate_Tk1[transitivity], ngroup))
 
             Tterm = list(map(add, Tk1term, k0term))
