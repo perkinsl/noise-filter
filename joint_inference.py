@@ -64,7 +64,7 @@ def plot_joint_inference(data):
 
 	verb_categories, epsilon, delta = joint_inference(data, 1000)
 
-	Use every 10th value from last 500 iterations as samples
+	#Use every 10th value from last 500 iterations as samples
 	categorysamples = verb_categories[501::10]
 	epsilonsamples = epsilon[501::10]
 	np.savetxt('epsilon', epsilonsamples)
