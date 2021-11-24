@@ -1,6 +1,4 @@
 # noise-filter
-Bayesian verb argument structure learner with noise filter
-
 This repo contains all scripts for running the model simulations reported in Perkins, Feldman, & Lidz (under review), "The Power of Ignoring: Filtering Input for Argument Structure Acquisition." Scripts were written in Python 3 by Laurel Perkins, Xinyue Cui, and Shalinee Maitra. Contact: perkinsl@ucla.edu
 
 Notes: all probabilities in these scripts are in log space except where comments indicate otherwise. The dataset compiled from the CHILDES Treebank (Pearl & Sprouse, 2013) is summarized in Perkins, Feldman, & Lidz. Runtime for these scripts is quite long over this dataset (several hours to several days depending on processor). Scripts can also be tested in the mini toy datasets provided in Test_data.xlsx.
