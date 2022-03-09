@@ -1,7 +1,11 @@
 # noise-filter
-This repo contains all scripts for running the model simulations reported in Perkins, Feldman, & Lidz (under review), "The Power of Ignoring: Filtering Input for Argument Structure Acquisition." Scripts were written in Python 3 by Laurel Perkins, Xinyue Cui, and Shalinee Maitra. Contact: perkinsl@ucla.edu
+This repo contains all scripts for running the model simulations reported in:
 
-Notes: all probabilities in these scripts are in log space except where comments indicate otherwise. The dataset compiled from the CHILDES Treebank (Pearl & Sprouse, 2013) is summarized in Perkins, Feldman, & Lidz. Runtime for these scripts is quite long over this dataset (several hours to several days depending on processor). Scripts can also be tested in the mini toy datasets provided in Test_data.xlsx.
+Perkins, Feldman, & Lidz (2022), "The Power of Ignoring: Filtering Input for Argument Structure Acquisition," Cognitive Science, 46(1), e13080
+
+Please cite this paper in any publications using this code.
+
+Scripts were written in Python 3 by Laurel Perkins, Xinyue Cui, and Shalinee Maitra. Contact: perkinsl@ucla.edu
 
 ----------------------------------------------------------------
 SCRIPTS INCLUDE:
@@ -22,6 +26,7 @@ SCRIPTS INCLUDE:
 
 Dependencies: joint_inference.py imports MH.py and sample_categories.py. MH.py imports pdf_theta.py, pdf_delta_epsilon.py, and propose_and_accept.py. sample_categories.py imports likelihoods.py. pdf_theta.py has no dependencies on other scripts. pdf_delta_epsilon imports likelihoods.py. propose_and_accept imports pdf_theta.py and pdf_delta_epsilon.py.  
 
+Notes: all probabilities in these scripts are in log space except where comments indicate otherwise. The dataset compiled from the CHILDES Treebank (Pearl & Sprouse, 2013) is summarized in Perkins, Feldman, & Lidz. Runtime for these scripts is quite long over this dataset (several hours to several days depending on processor). Scripts can also be tested in the mini toy datasets provided in Test_data.xlsx.
 
 -----------------------------------------------------------------
 INSTRUCTIONS FOR RUNNING SCRIPTS:
