@@ -1,7 +1,5 @@
 # noise-filter
-This repo contains all scripts for running the model simulations reported in:
-
-Perkins, Feldman, & Lidz (2022), "The Power of Ignoring: Filtering Input for Argument Structure Acquisition," Cognitive Science, 46(1), e13080
+This repo contains all scripts for running the model simulations reported in Perkins, Feldman, & Lidz (2022), "The Power of Ignoring: Filtering Input for Argument Structure Acquisition," Cognitive Science, 46(1), e13080.
 
 Please cite this paper in any publications using this code.
 
